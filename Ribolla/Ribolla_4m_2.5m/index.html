@@ -93,8 +93,8 @@ let model=null,materials=[],wire=false,initial=null;
 const frameMaterials=[];
 const frameTextureCache=new Map();
 const FRAME_TEXTURES={
-  '#383E42':'../../Materials/ral_7024.jpg',
-  '#0A0A0A':'../../Materials/ral_9005.jpg'
+  '#383E42':'https://a5spas.github.io/Garden-Pergola/Materials/ral_7024.jpg',
+  '#0A0A0A':'https://a5spas.github.io/Garden-Pergola/Materials/ral_9005.jpg'
 };
 function loadFrameTexture(url){
   if(frameTextureCache.has(url)) return frameTextureCache.get(url);
@@ -151,7 +151,7 @@ document.getElementById('studioSoft').onclick=()=>setStudioLighting('soft');
 document.getElementById('studioBright').onclick=()=>setStudioLighting('bright');
 document.querySelectorAll('.swatch').forEach(button=>button.addEventListener('click',()=>setFrameColour(button.dataset.colour)));
 const loader=new GLTFLoader();
-loader.load('models/Ribolla_4m_250.glb',gltf=>{
+loader.load('https://a5spas.github.io/Garden-Pergola/Ribolla/Ribolla_4m_2.5m/models/Ribolla_4m_250.glb',gltf=>{
   model=gltf.scene;
   model.traverse(o=>{
     if(!o.isMesh || !o.material) return;
@@ -177,7 +177,7 @@ loader.load('models/Ribolla_4m_250.glb',gltf=>{
   fitModel();
 },undefined,e=>{
   console.error('Ribolla GLB load error:',e);
-  status.textContent='Model failed to load. Check the GitHub Pages model URL and browser console.';
+  status.textContent='Model failed to load: '+(e?.message||'unknown error')+'. Check that models/Ribolla_4m_250.glb exists in this folder.';
   hudStatus.textContent='Model failed to load';
 });
 function resize(){const w=viewport.clientWidth,h=viewport.clientHeight;camera.aspect=w/Math.max(h,1);camera.updateProjectionMatrix();renderer.setSize(w,h,false);}new ResizeObserver(resize).observe(viewport);resize();

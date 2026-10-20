@@ -12,6 +12,9 @@ aside{padding:22px;background:var(--panel);border-right:1px solid var(--line);ov
 h1{font-size:20px;margin:0 0 8px}p{color:var(--muted);margin:0 0 16px}
 .status{padding:12px;border-radius:10px;background:#222831;color:var(--muted);overflow-wrap:anywhere}
 .controls{display:grid;gap:9px;margin-top:16px}
+.width-picker{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.width-picker h2{font-size:15px;margin:0 0 6px}.width-picker p{font-size:12px;margin-bottom:12px}
+.width-options{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.width-choice{padding:9px 8px;font-size:12px}.width-choice.selected{outline:2px solid #f4f6f8;outline-offset:1px}
 .colour-picker{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
 .colour-picker h2{font-size:15px;margin:0 0 6px}
 .colour-picker p{font-size:12px;margin-bottom:12px}
@@ -45,6 +48,16 @@ button.secondary{background:#2b323d;color:var(--text);border:1px solid #424b59}
 <button id="reset" class="secondary">Reset camera</button>
 <button id="wire" class="secondary">Toggle wireframe</button>
 </div>
+<section class="width-picker">
+  <h2>Width</h2>
+  <p>Choose the Ribolla pergola width.</p>
+  <div class="width-options">
+    <button class="width-choice selected" data-width="250">2.5 m</button>
+    <button class="width-choice secondary" data-width="300">3 m</button>
+    <button class="width-choice secondary" data-width="350">3.5 m</button>
+    <button class="width-choice secondary" data-width="400">4 m</button>
+  </div>
+</section>
 <section class="colour-picker">
   <h2>Frame colour</h2>
   <p>Choose the aluminium frame texture. The glass roof keeps its exported material.</p>
@@ -110,6 +123,7 @@ function loadFrameTexture(url){
   frameTextureCache.set(url,promise); return promise;
 }
 async function setFrameColour(hex){
+  selectedColour=hex;
   const url=FRAME_TEXTURES[hex];
   if(!url || !frameMaterials.length) return;
   try{
@@ -151,35 +165,65 @@ document.getElementById('studioSoft').onclick=()=>setStudioLighting('soft');
 document.getElementById('studioBright').onclick=()=>setStudioLighting('bright');
 document.querySelectorAll('.swatch').forEach(button=>button.addEventListener('click',()=>setFrameColour(button.dataset.colour)));
 const loader=new GLTFLoader();
-loader.load('https://a5spas.github.io/Garden-Pergola/Ribolla/Ribolla_4m_2.5m/models/Ribolla_4m_250.glb',gltf=>{
-  model=gltf.scene;
-  model.traverse(o=>{
-    if(!o.isMesh || !o.material) return;
-    const mats=Array.isArray(o.material)?o.material:[o.material];
-    const updated=mats.map(original=>{
-      const mat=original.clone();
-      const name=(original.name||'').toLowerCase();
-      if(name.includes('ral_7024') || name.includes('ral_9005')){
-        frameMaterials.push(mat);
-      }
-      return mat;
-    });
-    o.material=Array.isArray(o.material)?updated:updated[0];
+const MODEL_BASE='https://a5spas.github.io/Garden-Pergola/Ribolla/models/';
+const MODEL_FILES={
+  '250':'Ribolla_4m_250.glb',
+  '300':'Ribolla_4m_300.glb',
+  '350':'Ribolla_4m_350.glb',
+  '400':'Ribolla_4m_400.glb'
+};
+let selectedWidth='250', loadVersion=0, selectedColour='#383E42';
+async function loadModel(width){
+  selectedWidth=width;
+  const thisLoad=++loadVersion;
+  document.querySelectorAll('.width-choice').forEach(b=>{
+    const selected=b.dataset.width===width;
+    b.classList.toggle('selected',selected);
+    b.classList.toggle('secondary',!selected);
   });
-  scene.add(model);
-  // Apply the selected RAL image texture to frame material targets only; roof glass stays untouched.
-  if(frameMaterials.length===0){
-    status.textContent='Model loaded, but no RAL frame material was detected. Check the exported GLB material names.';
-  } else {
-    setFrameColour('#383E42');
-    status.textContent='Model loaded with exported materials. Frame colour changes separately; roof glass is preserved.';
-  }
-  fitModel();
-},undefined,e=>{
-  console.error('Ribolla GLB load error:',e);
-  status.textContent='Model failed to load: '+(e?.message||'unknown error')+'. Check that models/Ribolla_4m_250.glb exists in this folder.';
-  hudStatus.textContent='Model failed to load';
-});
+  status.textContent='Loading '+({'250':'2.5 m','300':'3 m','350':'3.5 m','400':'4 m'}[width])+' Ribolla model…';
+  hudStatus.textContent='Loading model…';
+  loader.load(MODEL_BASE+MODEL_FILES[width],gltf=>{
+    if(thisLoad!==loadVersion){
+      gltf.scene.traverse(o=>{if(o.isMesh){o.geometry?.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose());}});
+      return;
+    }
+    if(model){
+      scene.remove(model);
+      model.traverse(o=>{if(o.isMesh){o.geometry?.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose());}});
+    }
+    model=gltf.scene;
+    materials=[];frameMaterials.length=0;
+    model.traverse(o=>{
+      if(!o.isMesh || !o.material) return;
+      const mats=Array.isArray(o.material)?o.material:[o.material];
+      const updated=mats.map(original=>{
+        const mat=original.clone();
+        materials.push(mat);
+        const name=(original.name||'').toLowerCase();
+        if(name.includes('ral_7024') || name.includes('ral_9005')) frameMaterials.push(mat);
+        return mat;
+      });
+      o.material=Array.isArray(o.material)?updated:updated[0];
+    });
+    scene.add(model);
+    fitModel();
+    if(frameMaterials.length===0){
+      status.textContent='Model loaded, but no RAL frame material was detected. Check the exported GLB material names.';
+    }else{
+      status.textContent='Model loaded. Frame colour and roof material controls are ready.';
+      setFrameColour(selectedColour);
+    }
+    hudStatus.textContent=({'250':'2.5 m','300':'3 m','350':'3.5 m','400':'4 m'}[width])+' Ribolla';
+  },undefined,e=>{
+    if(thisLoad!==loadVersion)return;
+    console.error('Ribolla GLB load error:',e);
+    status.textContent='Model failed to load: '+(e?.message||'unknown error')+'. Check that '+MODEL_FILES[width]+' exists in Ribolla/models.';
+    hudStatus.textContent='Model failed to load';
+  });
+}
+document.querySelectorAll('.width-choice').forEach(button=>button.addEventListener('click',()=>loadModel(button.dataset.width)));
+loadModel('250');
 function resize(){const w=viewport.clientWidth,h=viewport.clientHeight;camera.aspect=w/Math.max(h,1);camera.updateProjectionMatrix();renderer.setSize(w,h,false);}new ResizeObserver(resize).observe(viewport);resize();
 renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera);});
 </script>

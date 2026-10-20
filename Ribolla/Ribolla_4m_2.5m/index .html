@@ -56,12 +56,12 @@ button.secondary{background:#2b323d;color:var(--text);border:1px solid #424b59}
 </section>
 <section class="lighting-picker">
   <h2>Lighting setup</h2>
-  <p>Switch between two preview environments.</p>
+  <p>Switch between two studio lighting styles.</p>
   <div class="lighting-buttons">
-    <button id="studioLighting" class="lighting-choice selected">Studio lighting</button>
-    <button id="sunLighting" class="lighting-choice secondary">Direct sun</button>
+    <button id="studioSoft" class="lighting-choice selected">Studio Soft</button>
+    <button id="studioBright" class="lighting-choice secondary">Studio Bright</button>
   </div>
-  <div id="lightingDescription" class="selected-colour">Soft, balanced studio-style illumination.</div>
+  <div id="lightingDescription" class="selected-colour">Soft, balanced studio lighting with gentle shadows.</div>
 </section>
 <p class="hint">Drag to orbit, use the mouse wheel to zoom, and right-drag to pan. This is an early configurator test, not the finished product configurator.</p>
 </aside>
@@ -81,12 +81,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 const viewport=document.getElementById('viewport'),status=document.getElementById('status'),hudStatus=document.getElementById('hudStatus');
 const scene=new THREE.Scene();scene.background=new THREE.Color(0xffffff);
-const hemi=new THREE.HemisphereLight(0xffffff,0x7b8490,3.6);scene.add(hemi);
-const key=new THREE.DirectionalLight(0xffffff,4.8);key.position.set(5,9,7);scene.add(key);
-const fill=new THREE.DirectionalLight(0xe3edff,3.0);fill.position.set(-7,4,-5);scene.add(fill);
-const rim=new THREE.DirectionalLight(0xffffff,2.25);rim.position.set(0,7,-8);scene.add(rim);
-const sun=new THREE.DirectionalLight(0xfff0d6,6.3);sun.position.set(-8,12,5);sun.visible=false;scene.add(sun);
-const sunAmbient=new THREE.HemisphereLight(0xdce8ff,0x77716a,1.5);sunAmbient.visible=false;scene.add(sunAmbient);
+const hemi=new THREE.HemisphereLight(0xffffff,0x7b8490,3.2);scene.add(hemi);
+const key=new THREE.DirectionalLight(0xffffff,4.2);key.position.set(5,9,7);scene.add(key);
+const fill=new THREE.DirectionalLight(0xe3edff,2.7);fill.position.set(-7,4,-5);scene.add(fill);
+const rim=new THREE.DirectionalLight(0xffffff,2.0);rim.position.set(0,7,-8);scene.add(rim);
 const camera=new THREE.PerspectiveCamera(45,1,.01,100000);camera.position.set(7,5,8);
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;viewport.appendChild(renderer.domElement);
 const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.06;
@@ -133,30 +131,25 @@ function fitModel(){if(!model)return;const b=new THREE.Box3().setFromObject(mode
 document.getElementById('fit').onclick=fitModel;
 document.getElementById('reset').onclick=()=>{if(initial){camera.position.copy(initial.position);controls.target.copy(initial.target);controls.update();}};
 document.getElementById('wire').onclick=()=>{wire=!wire;materials.forEach(m=>{m.wireframe=wire;m.needsUpdate=true;});};
-document.querySelectorAll('.swatch').forEach(button=>{
-  button.type='button';
-  button.addEventListener('click',()=>setFrameColour(button.dataset.colour));
-});
-document.getElementById('studioLighting').type='button';
-document.getElementById('sunLighting').type='button';
-document.getElementById('studioLighting').addEventListener('click',()=>{
-  hemi.visible=true; key.visible=true; fill.visible=true; rim.visible=true;
-  sun.visible=false; sunAmbient.visible=false;
-  document.getElementById('studioLighting').classList.add('selected');
-  document.getElementById('studioLighting').classList.remove('secondary');
-  document.getElementById('sunLighting').classList.remove('selected');
-  document.getElementById('sunLighting').classList.add('secondary');
-  document.getElementById('lightingDescription').textContent='Soft, balanced studio-style illumination.';
-});
-document.getElementById('sunLighting').addEventListener('click',()=>{
-  hemi.visible=false; key.visible=false; fill.visible=false; rim.visible=false;
-  sun.visible=true; sunAmbient.visible=true;
-  document.getElementById('sunLighting').classList.add('selected');
-  document.getElementById('sunLighting').classList.remove('secondary');
-  document.getElementById('studioLighting').classList.remove('selected');
-  document.getElementById('studioLighting').classList.add('secondary');
-  document.getElementById('lightingDescription').textContent='Direct sunlight with softer ambient fill.';
-});
+
+function setStudioLighting(mode){
+  const bright=mode==='bright';
+  hemi.intensity=bright?4.0:3.2;
+  key.intensity=bright?5.5:4.2;
+  fill.intensity=bright?3.8:2.7;
+  rim.intensity=bright?2.8:2.0;
+  key.position.set(bright?3:5,bright?11:9,bright?6:7);
+  fill.position.set(bright?-6:-7,bright?5:4,bright?-4:-5);
+  rim.position.set(bright?1:0,bright?8:7,-8);
+  document.getElementById('studioSoft').classList.toggle('selected',!bright);
+  document.getElementById('studioSoft').classList.toggle('secondary',bright);
+  document.getElementById('studioBright').classList.toggle('selected',bright);
+  document.getElementById('studioBright').classList.toggle('secondary',!bright);
+  document.getElementById('lightingDescription').textContent=bright?'Brighter studio lighting with stronger highlights and more fill.':'Soft, balanced studio lighting with gentle shadows.';
+}
+document.getElementById('studioSoft').onclick=()=>setStudioLighting('soft');
+document.getElementById('studioBright').onclick=()=>setStudioLighting('bright');
+document.querySelectorAll('.swatch').forEach(button=>button.addEventListener('click',()=>setFrameColour(button.dataset.colour)));
 const loader=new GLTFLoader();
 loader.load('models/Ribolla_4m_250.glb',gltf=>{
   model=gltf.scene;

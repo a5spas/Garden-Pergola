@@ -141,7 +141,34 @@ async function setFrameColour(hex){
   }catch(err){console.error(err);status.textContent='Could not load '+url+'. Check the Materials folder and filename.';}
 }
 
-function fitModel(){if(!model)return;const b=new THREE.Box3().setFromObject(model);if(b.isEmpty())return;const c=b.getCenter(new THREE.Vector3());model.position.sub(c);const bb=new THREE.Box3().setFromObject(model),s=bb.getSize(new THREE.Vector3()),max=Math.max(s.x,s.y,s.z,.1);camera.near=Math.max(max/10000,.001);camera.far=max*100;camera.updateProjectionMatrix();camera.position.set(max*1.35,max*.95,max*1.55);controls.target.set(0,0,0);controls.minDistance=max*.15;controls.maxDistance=max*15;controls.update();grid.position.y=bb.min.y;grid.scale.setScalar(Math.max(max/20,.01));initial={position:camera.position.clone(),target:controls.target.clone()};hudStatus.textContent=`${s.x.toFixed(2)} × ${s.y.toFixed(2)} × ${s.z.toFixed(2)} model units`;}
+function fitModel(preserveView=false, previousView=null){
+  if(!model)return;
+  const b=new THREE.Box3().setFromObject(model);if(b.isEmpty())return;
+  const c=b.getCenter(new THREE.Vector3());model.position.sub(c);
+  const bb=new THREE.Box3().setFromObject(model),s=bb.getSize(new THREE.Vector3()),max=Math.max(s.x,s.y,s.z,.1);
+  camera.near=Math.max(max/10000,.001);camera.far=max*100;camera.updateProjectionMatrix();
+  if(preserveView && previousView){
+    // Keep the user's orbit direction and zoom framing when switching model sizes.
+    const target=new THREE.Vector3(0,0,0);
+    const distance=Math.max(max*.15,Math.min(previousView.distanceRatio*max,max*15));
+    camera.position.copy(target).addScaledVector(previousView.direction,distance);
+    controls.target.copy(target);
+  }else{
+    camera.position.set(max*1.35,max*.95,max*1.55);
+    controls.target.set(0,0,0);
+  }
+  controls.minDistance=max*.15;controls.maxDistance=max*15;controls.update();
+  grid.position.y=bb.min.y;grid.scale.setScalar(Math.max(max/20,.01));
+  initial={position:camera.position.clone(),target:controls.target.clone()};
+  currentModelMax=max;
+  hudStatus.textContent=`${s.x.toFixed(2)} × ${s.y.toFixed(2)} × ${s.z.toFixed(2)} model units`;
+}
+let currentModelMax=1;
+function captureView(){
+  const offset=camera.position.clone().sub(controls.target);
+  const distance=offset.length();
+  return {direction:offset.normalize(),distanceRatio:distance/Math.max(currentModelMax,.1)};
+}
 document.getElementById('fit').onclick=fitModel;
 document.getElementById('reset').onclick=()=>{if(initial){camera.position.copy(initial.position);controls.target.copy(initial.target);controls.update();}};
 document.getElementById('wire').onclick=()=>{wire=!wire;materials.forEach(m=>{m.wireframe=wire;m.needsUpdate=true;});};
@@ -174,6 +201,7 @@ const MODEL_FILES={
 };
 let selectedWidth='250', loadVersion=0, selectedColour='#383E42';
 async function loadModel(width){
+  const previousView=model?captureView():null;
   selectedWidth=width;
   const thisLoad=++loadVersion;
   document.querySelectorAll('.width-choice').forEach(b=>{
@@ -207,7 +235,7 @@ async function loadModel(width){
       o.material=Array.isArray(o.material)?updated:updated[0];
     });
     scene.add(model);
-    fitModel();
+    fitModel(!!previousView,previousView);
     if(frameMaterials.length===0){
       status.textContent='Model loaded, but no RAL frame material was detected. Check the exported GLB material names.';
     }else{

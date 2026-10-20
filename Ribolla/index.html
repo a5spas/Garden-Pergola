@@ -110,7 +110,7 @@ const rim=new THREE.DirectionalLight(0xffffff,2.0);rim.position.set(0,7,-8);scen
 const camera=new THREE.PerspectiveCamera(45,1,.01,100000);camera.position.set(7,5,8);
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;viewport.appendChild(renderer.domElement);
 const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.06;
-const grid=new THREE.GridHelper(20,20,0x667180,0x434b57);grid.material.transparent=true;grid.material.opacity=.45;scene.add(grid);
+// Floor grid removed for a clean product view.
 let model=null,materials=[],wire=false,initial=null;
 const frameMaterials=[];
 const frameTextureCache=new Map();
@@ -136,8 +136,11 @@ async function setFrameColour(hex){
   const url=FRAME_TEXTURES[hex];
   if(!url || !frameMaterials.length) return;
   try{
+    const targetMaterials=frameMaterials.slice();
     const texture=await loadFrameTexture(url);
-    frameMaterials.forEach(mat=>{
+    // A model may have changed while the texture was loading; only update the current frame materials.
+    if(targetMaterials.some(mat=>!frameMaterials.includes(mat))) return;
+    targetMaterials.forEach(mat=>{
       mat.map=texture; mat.color.setRGB(1,1,1);
       if('metalness' in mat) mat.metalness=0;
       if('roughness' in mat && mat.roughness<0.12) mat.roughness=0.35;
@@ -157,9 +160,11 @@ function fitModel(preserveView=false, previousView=null){
   const bb=new THREE.Box3().setFromObject(model),s=bb.getSize(new THREE.Vector3()),max=Math.max(s.x,s.y,s.z,.1);
   camera.near=Math.max(max/10000,.001);camera.far=max*100;camera.updateProjectionMatrix();
   if(preserveView && previousView){
-    // Keep the user's orbit direction and zoom framing when switching model sizes.
+    // Preserve the user's orbit direction and absolute camera distance.
+    // Larger length variants therefore appear larger in the viewport instead of
+    // being automatically zoomed back to the same apparent size.
     const target=new THREE.Vector3(0,0,0);
-    const distance=Math.max(max*.15,Math.min(previousView.distanceRatio*max,max*15));
+    const distance=Math.max(max*.15,Math.min(previousView.distance,max*15));
     camera.position.copy(target).addScaledVector(previousView.direction,distance);
     controls.target.copy(target);
   }else{
@@ -167,7 +172,6 @@ function fitModel(preserveView=false, previousView=null){
     controls.target.set(0,0,0);
   }
   controls.minDistance=max*.15;controls.maxDistance=max*15;controls.update();
-  grid.position.y=bb.min.y;grid.scale.setScalar(Math.max(max/20,.01));
   initial={position:camera.position.clone(),target:controls.target.clone()};
   currentModelMax=max;
   hudStatus.textContent=`${s.x.toFixed(2)} × ${s.y.toFixed(2)} × ${s.z.toFixed(2)} model units`;
@@ -176,7 +180,7 @@ let currentModelMax=1;
 function captureView(){
   const offset=camera.position.clone().sub(controls.target);
   const distance=offset.length();
-  return {direction:offset.normalize(),distanceRatio:distance/Math.max(currentModelMax,.1)};
+  return {direction:offset.normalize(),distance};
 }
 document.getElementById('fit').onclick=fitModel;
 document.getElementById('reset').onclick=()=>{if(initial){camera.position.copy(initial.position);controls.target.copy(initial.target);controls.update();}};
@@ -238,7 +242,10 @@ async function loadModel(width=selectedWidth,length=selectedLength){
       const updated=mats.map(original=>{
         const mat=original.clone(); materials.push(mat);
         const name=(original.name||'').toLowerCase();
-        if(name.includes('ral_7024') || name.includes('ral_9005')) frameMaterials.push(mat);
+        // Frame material names vary between exported length variants. Prefer explicit
+        // RAL/frame names, and use a safe non-glass fallback for differently named frames.
+        if(name.includes('ral_7024') || name.includes('ral_9005') || name.includes('frame') || name.includes('aluminium') || name.includes('aluminum')) frameMaterials.push(mat);
+        else if(!name.includes('glass') && !name.includes('polycarb') && !name.includes('roof') && !name.includes('transparent')) frameMaterials.push(mat);
         return mat;
       });
       o.material=Array.isArray(o.material)?updated:updated[0];

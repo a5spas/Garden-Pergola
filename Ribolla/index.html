@@ -58,6 +58,15 @@ button.secondary{background:#2b323d;color:var(--text);border:1px solid #424b59}
     <button class="width-choice secondary" data-width="400">4 m</button>
   </div>
 </section>
+<section class="width-picker">
+  <h2>Length</h2>
+  <p>Choose the Ribolla pergola length.</p>
+  <div class="width-options">
+    <button class="length-choice width-choice selected" data-length="4m">4 m</button>
+    <button class="length-choice width-choice secondary" data-length="5m">5 m</button>
+    <button class="length-choice width-choice secondary" data-length="6m">6 m</button>
+  </div>
+</section>
 <section class="colour-picker">
   <h2>Frame colour</h2>
   <p>Choose the aluminium frame texture. The glass roof keeps its exported material.</p>
@@ -193,25 +202,26 @@ document.getElementById('studioBright').onclick=()=>setStudioLighting('bright');
 document.querySelectorAll('.swatch').forEach(button=>button.addEventListener('click',()=>setFrameColour(button.dataset.colour)));
 const loader=new GLTFLoader();
 const MODEL_BASE='https://a5spas.github.io/Garden-Pergola/Ribolla/models/';
-const MODEL_FILES={
-  '250':'Ribolla_4m_250.glb',
-  '300':'Ribolla_4m_300.glb',
-  '350':'Ribolla_4m_350.glb',
-  '400':'Ribolla_4m_400.glb'
-};
-let selectedWidth='250', loadVersion=0, selectedColour='#383E42';
-async function loadModel(width){
+const WIDTH_LABELS={'250':'2.5 m','300':'3 m','350':'3.5 m','400':'4 m'};
+const LENGTHS=['4m','5m','6m'];
+let selectedWidth='250', selectedLength='4m', loadVersion=0, selectedColour='#383E42';
+function modelFilename(width,length){return 'Ribolla_'+length+'_'+width+'.glb';}
+async function loadModel(width=selectedWidth,length=selectedLength){
   const previousView=model?captureView():null;
-  selectedWidth=width;
+  selectedWidth=width; selectedLength=length;
   const thisLoad=++loadVersion;
-  document.querySelectorAll('.width-choice').forEach(b=>{
+  document.querySelectorAll('.width-choice[data-width]').forEach(b=>{
     const selected=b.dataset.width===width;
-    b.classList.toggle('selected',selected);
-    b.classList.toggle('secondary',!selected);
+    b.classList.toggle('selected',selected); b.classList.toggle('secondary',!selected);
   });
-  status.textContent='Loading '+({'250':'2.5 m','300':'3 m','350':'3.5 m','400':'4 m'}[width])+' Ribolla model…';
+  document.querySelectorAll('.length-choice').forEach(b=>{
+    const selected=b.dataset.length===length;
+    b.classList.toggle('selected',selected); b.classList.toggle('secondary',!selected);
+  });
+  const filename=modelFilename(width,length);
+  status.textContent='Loading '+WIDTH_LABELS[width]+' wide × '+length+' long Ribolla model…';
   hudStatus.textContent='Loading model…';
-  loader.load(MODEL_BASE+MODEL_FILES[width],gltf=>{
+  loader.load(MODEL_BASE+filename,gltf=>{
     if(thisLoad!==loadVersion){
       gltf.scene.traverse(o=>{if(o.isMesh){o.geometry?.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose());}});
       return;
@@ -226,8 +236,7 @@ async function loadModel(width){
       if(!o.isMesh || !o.material) return;
       const mats=Array.isArray(o.material)?o.material:[o.material];
       const updated=mats.map(original=>{
-        const mat=original.clone();
-        materials.push(mat);
+        const mat=original.clone(); materials.push(mat);
         const name=(original.name||'').toLowerCase();
         if(name.includes('ral_7024') || name.includes('ral_9005')) frameMaterials.push(mat);
         return mat;
@@ -242,16 +251,17 @@ async function loadModel(width){
       status.textContent='Model loaded. Frame colour and roof material controls are ready.';
       setFrameColour(selectedColour);
     }
-    hudStatus.textContent=({'250':'2.5 m','300':'3 m','350':'3.5 m','400':'4 m'}[width])+' Ribolla';
+    hudStatus.textContent=WIDTH_LABELS[width]+' wide × '+length+' long Ribolla';
   },undefined,e=>{
     if(thisLoad!==loadVersion)return;
     console.error('Ribolla GLB load error:',e);
-    status.textContent='Model failed to load: '+(e?.message||'unknown error')+'. Check that '+MODEL_FILES[width]+' exists in Ribolla/models.';
+    status.textContent='Model failed to load: '+(e?.message||'unknown error')+'. Check that '+filename+' exists in Ribolla/models.';
     hudStatus.textContent='Model failed to load';
   });
 }
-document.querySelectorAll('.width-choice').forEach(button=>button.addEventListener('click',()=>loadModel(button.dataset.width)));
-loadModel('250');
+document.querySelectorAll('.width-choice[data-width]').forEach(button=>button.addEventListener('click',()=>loadModel(button.dataset.width,selectedLength)));
+document.querySelectorAll('.length-choice').forEach(button=>button.addEventListener('click',()=>loadModel(selectedWidth,button.dataset.length)));
+loadModel('250','4m');
 function resize(){const w=viewport.clientWidth,h=viewport.clientHeight;camera.aspect=w/Math.max(h,1);camera.updateProjectionMatrix();renderer.setSize(w,h,false);}new ResizeObserver(resize).observe(viewport);resize();
 renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera);});
 </script>

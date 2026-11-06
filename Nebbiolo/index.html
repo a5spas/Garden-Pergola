@@ -3,274 +3,274 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nebbiolo Pergola 3D Test</title>
+<title>Nebbiolo Pergola Configurator Test</title>
 <style>
-:root{color-scheme:dark;--panel:#171a20;--line:#303641;--text:#f4f6f8;--muted:#aeb7c4}
-*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#0e1116;color:var(--text)}
-.app{min-height:100vh;display:grid;grid-template-columns:300px minmax(0,1fr)}
-aside{padding:22px;background:var(--panel);border-right:1px solid var(--line);overflow:auto}
-h1{font-size:20px;margin:0 0 8px}p{color:var(--muted);margin:0 0 16px}
-.status{padding:12px;border-radius:10px;background:#222831;color:var(--muted);overflow-wrap:anywhere}
-.controls{display:grid;gap:9px;margin-top:16px}
-.width-picker{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
-.width-picker h2{font-size:15px;margin:0 0 6px}.width-picker p{font-size:12px;margin-bottom:12px}
-.width-options{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.width-choice{padding:9px 8px;font-size:12px}.width-choice.selected{outline:2px solid #f4f6f8;outline-offset:1px}
-.colour-picker{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
-.colour-picker h2{font-size:15px;margin:0 0 6px}
-.colour-picker p{font-size:12px;margin-bottom:12px}
-.swatches{display:flex;gap:10px;flex-wrap:wrap}
-button.swatch{width:34px;height:34px;padding:0;border-radius:50%;background:var(--swatch);border:2px solid #68717e;box-shadow:inset 0 0 0 2px #171a20}
-button.swatch.selected{outline:2px solid #f4f6f8;outline-offset:2px}
-.selected-colour{font-size:12px;color:var(--muted);margin-top:12px}
-.lighting-picker{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
-.lighting-picker h2{font-size:15px;margin:0 0 6px}
-.lighting-picker p{font-size:12px;margin-bottom:12px}
-.lighting-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-button.lighting-choice{padding:9px 8px;font-size:12px}
-button.lighting-choice.selected{outline:2px solid #f4f6f8;outline-offset:1px}
-button{background:#e4edf6;color:#151920;border:0;border-radius:9px;padding:10px 12px;font-weight:650;cursor:pointer}
-button.secondary{background:#2b323d;color:var(--text);border:1px solid #424b59}
-.hint{font-size:12px;color:var(--muted);margin-top:18px}
-#viewport{position:relative;min-height:70vh;height:100vh;overflow:hidden}canvas{display:block;width:100%;height:100%}
-.hud{position:absolute;left:16px;top:16px;background:#11151bcc;border:1px solid #343b46;padding:10px 12px;border-radius:10px;color:#dce3eb;pointer-events:none}
+:root{color-scheme:light;--panel:#fff;--line:#dce1e7;--text:#202833;--muted:#657181;--accent:#273746;--active:#273746}
+*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f2f4f6;color:var(--text)}
+.app{min-height:100vh;height:100vh;display:grid;grid-template-columns:minmax(0,1fr) 370px}
+#viewport{position:relative;min-width:0;height:100vh;overflow:hidden;background:#fff}
+canvas{display:block;width:100%;height:100%}
+.hud{position:absolute;left:16px;top:16px;background:#ffffffdf;border:1px solid var(--line);padding:10px 12px;border-radius:10px;color:#26313d;pointer-events:none}
 .hud strong{display:block;margin-bottom:2px}
-@media(max-width:760px){.app{grid-template-columns:1fr}aside{border-right:0;border-bottom:1px solid var(--line)}#viewport{height:65vh;min-height:420px}}
+aside{padding:20px;background:var(--panel);border-left:1px solid var(--line);overflow:auto}
+h1{font-size:21px;margin:0 0 5px}h2{font-size:14px;margin:0 0 5px}
+p{color:var(--muted);margin:0 0 12px}.status{padding:10px;border-radius:9px;background:#f0f3f6;color:#465364;overflow-wrap:anywhere;font-size:12px}
+section{margin-top:17px;padding-top:14px;border-top:1px solid var(--line)}
+.section-note{font-size:12px;margin-bottom:9px}
+.swatches{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px}
+button.swatch{width:34px;height:34px;padding:0;border-radius:50%;background:var(--swatch);border:2px solid #aab2bc;box-shadow:inset 0 0 0 2px white;cursor:pointer}
+button.swatch.selected{outline:2px solid #273746;outline-offset:2px}
+.selected-colour{font-size:12px;color:var(--muted);margin-top:9px}
+.option-group{margin-top:11px}
+.option-heading{font-size:12px;font-weight:700;margin-bottom:7px}
+.toggle-list{display:flex;flex-wrap:wrap;gap:7px}
+button.toggle{background:#f4f6f8;color:#344150;border:1px solid #cfd6de;border-radius:7px;padding:7px 10px;font-size:12px;font-weight:600;cursor:pointer;transition:.12s}
+button.toggle:hover{border-color:#778595}
+button.toggle.active{background:#273746;color:white;border-color:#273746}
+button.toggle:disabled{opacity:.5;cursor:not-allowed}
+button.action{background:#273746;color:white;border:0;border-radius:8px;padding:9px 11px;font-weight:650;cursor:pointer;margin:4px 5px 0 0}
+button.action.secondary{background:#eef1f4;color:#26313d;border:1px solid #d2d8df}
+.hint{font-size:11px;color:var(--muted);margin-top:14px}
+.dependency-note{font-size:11px;color:#657181;margin-top:7px}
+@media(max-width:850px){.app{height:auto;min-height:100vh;grid-template-columns:1fr}#viewport{height:60vh;min-height:400px;grid-row:1}aside{border-left:0;border-top:1px solid var(--line)}}
 </style>
 </head>
 <body>
 <div class="app">
+<main id="viewport"><div class="hud"><strong>Nebbiolo preview</strong><span id="hudStatus">Loading model…</span></div></main>
 <aside>
-<h1>Nebbiolo 3D Viewer</h1>
-<p>First GitHub Pages test using the exported Nebbiolo model.</p>
-<div class="status" id="status">Loading Nebbiolo model…</div>
-<div class="controls">
-<button id="fit">Fit model in view</button>
-<button id="reset" class="secondary">Reset camera</button>
-<button id="wire" class="secondary">Toggle wireframe</button>
+<h1>Nebbiolo configurator</h1>
+<p>400cm × 250cm accessory test</p>
+<div class="status" id="status">Loading main frame…</div>
+
+<section>
+<h2>Frame colour</h2>
+<p class="section-note">Choose the aluminium frame finish.</p>
+<div class="swatches">
+<button class="swatch selected" data-colour="#383E42" aria-label="RAL 7024 Graphite Grey" title="RAL 7024 Graphite Grey" style="--swatch:#383E42"></button>
+<button class="swatch" data-colour="#0A0A0A" aria-label="RAL 9005 Jet Black" title="RAL 9005 Jet Black" style="--swatch:#0A0A0A"></button>
 </div>
-<section class="width-picker">
-  <h2>Width</h2>
-  <p>Choose the Nebbiolo pergola width.</p>
-  <div class="width-options">
-    <button class="width-choice selected" data-width="250">2.5 m</button>
-    <button class="width-choice secondary" data-width="300">3 m</button>
-    <button class="width-choice secondary" data-width="350">3.5 m</button>
-    <button class="width-choice secondary" data-width="400">4 m</button>
-  </div>
+<div id="selectedColour" class="selected-colour">Selected: RAL 7024 — Graphite Grey</div>
 </section>
-<section class="width-picker">
-  <h2>Length</h2>
-  <p>Choose the Nebbiolo pergola length.</p>
-  <div class="width-options">
-    <button class="length-choice width-choice selected" data-length="4m">4 m</button>
-    <button class="length-choice width-choice secondary" data-length="5m">5 m</button>
-    <button class="length-choice width-choice secondary" data-length="6m">6 m</button>
-  </div>
+
+<section>
+<h2>Left side</h2>
+<p class="section-note">The gable can be combined with one side infill/door option.</p>
+<div class="option-group">
+<div class="option-heading">Side gable</div>
+<div class="toggle-list">
+<button class="toggle" id="leftGable">＋ Add gable</button>
+</div>
+</div>
+<div class="option-group">
+<div class="option-heading">Choose side option</div>
+<div class="toggle-list" id="leftOptions">
+<button class="toggle" data-slot="left" data-path="Sidewall/Nebbiolo_Sidewall_Glass_Left.glb">Glass wall</button>
+<button class="toggle" data-slot="left" data-path="Sidewall/Nebbiolo_Sidewall_Polycarbonate_Left.glb">Clear polycarbonate</button>
+<button class="toggle" data-slot="left" data-path="Sidewall/Nebbiolo_Sidewall_Polycarbonate_Grey_Left.glb">Grey polycarbonate</button>
+<button class="toggle" data-slot="left" data-path="Sidewall/Nebbiolo_Sidewall_Polycarbonate_Cream_Left.glb">Cream polycarbonate</button>
+<button class="toggle" data-slot="left" data-path="Sliding_Doors/Nebbiolo_Sliding_Door_Left.glb">Sliding doors</button>
+<button class="toggle" data-slot="left" data-path="Steel_Look_Doors/Nebbiolo_Steel_Look_Doors_Left.glb">Steel-look doors</button>
+</div>
+</div>
+<div class="dependency-note">Selecting a side wall or side door automatically adds the gable it needs. You can also add the gable on its own.</div>
 </section>
-<section class="colour-picker">
-  <h2>Frame colour</h2>
-  <p>Choose the aluminium frame texture. The glass roof keeps its exported material.</p>
-  <div class="swatches">
-    <button class="swatch selected" data-colour="#383E42" aria-label="RAL 7024 Graphite Grey" title="RAL 7024 Graphite Grey" style="--swatch:#383E42"></button>
-    <button class="swatch" data-colour="#0A0A0A" aria-label="RAL 9005 Jet Black" title="RAL 9005 Jet Black" style="--swatch:#0A0A0A"></button>
-  </div>
-  <div id="selectedColour" class="selected-colour">Selected: RAL 7024 — Graphite Grey</div>
+
+<section>
+<h2>Right side</h2>
+<p class="section-note">Configure independently from the left side.</p>
+<div class="option-group">
+<div class="option-heading">Side gable</div>
+<div class="toggle-list">
+<button class="toggle" id="rightGable">＋ Add gable</button>
+</div>
+</div>
+<div class="option-group">
+<div class="option-heading">Choose side option</div>
+<div class="toggle-list" id="rightOptions">
+<button class="toggle" data-slot="right" data-path="Sidewall/Nebbiolo_Sidewall_Glass_Right.glb">Glass wall</button>
+<button class="toggle" data-slot="right" data-path="Sidewall/Nebbiolo_Sidewall_Polycarbonate_Right.glb">Clear polycarbonate</button>
+<button class="toggle" data-slot="right" data-path="Sidewall/Nebbiolo_Sidewall_Polycarbonate_Grey_Right.glb">Grey polycarbonate</button>
+<button class="toggle" data-slot="right" data-path="Sidewall/Nebbiolo_Sidewall_Polycarbonate_Cream_Right.glb">Cream polycarbonate</button>
+<button class="toggle" data-slot="right" data-path="Sliding_Doors/Nebbiolo_Sliding_Door_Right.glb">Sliding doors</button>
+<button class="toggle" data-slot="right" data-path="Steel_Look_Doors/Nebbiolo_Steel_Look_Doors_Right.glb">Steel-look doors</button>
+</div>
+</div>
+<div class="dependency-note">Selecting a side wall or side door automatically adds the gable it needs.</div>
 </section>
-<section class="lighting-picker">
-  <h2>Lighting setup</h2>
-  <p>Switch between two studio lighting styles.</p>
-  <div class="lighting-buttons">
-    <button id="studioSoft" class="lighting-choice selected">Studio Soft</button>
-    <button id="studioBright" class="lighting-choice secondary">Studio Bright</button>
-  </div>
-  <div id="lightingDescription" class="selected-colour">Soft, balanced studio lighting with gentle shadows.</div>
+
+<section>
+<h2>Front</h2>
+<p class="section-note">Choose one front door system.</p>
+<div class="toggle-list" id="frontOptions">
+<button class="toggle" data-slot="front" data-path="Sliding_Doors/Nebbiolo_Sliding_Door_Front.glb">Sliding doors</button>
+<button class="toggle" data-slot="front" data-path="Steel_Look_Doors/Nebbiolo_Steel_Look_Doors_Front.glb">Steel-look doors</button>
+</div>
 </section>
-<p class="hint">Drag to orbit, use the mouse wheel to zoom, and right-drag to pan. This is an early configurator test, not the finished product configurator.</p>
+
+<section>
+<h2>Viewer</h2>
+<button class="action" id="fit">Fit model in view</button>
+<button class="action secondary" id="reset">Reset camera</button>
+<button class="action secondary" id="wire">Toggle wireframe</button>
+</section>
+<p class="hint">Drag to orbit, use the mouse wheel to zoom, and right-drag to pan. More accessory options can be added to this button-based layout as the configurator develops.</p>
 </aside>
-<main id="viewport"><div class="hud"><strong>Ribolla preview</strong><span id="hudStatus">Loading model…</span></div></main>
 </div>
+
 <script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
-  }
-}
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}
 </script>
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-const viewport=document.getElementById('viewport'),status=document.getElementById('status'),hudStatus=document.getElementById('hudStatus');
+
+const viewport=document.getElementById('viewport');
+const status=document.getElementById('status');
+const hudStatus=document.getElementById('hudStatus');
 const scene=new THREE.Scene();scene.background=new THREE.Color(0xffffff);
 const hemi=new THREE.HemisphereLight(0xffffff,0x7b8490,3.2);scene.add(hemi);
 const key=new THREE.DirectionalLight(0xffffff,4.2);key.position.set(5,9,7);scene.add(key);
 const fill=new THREE.DirectionalLight(0xe3edff,2.7);fill.position.set(-7,4,-5);scene.add(fill);
-const rim=new THREE.DirectionalLight(0xffffff,2.0);rim.position.set(0,7,-8);scene.add(rim);
-const camera=new THREE.PerspectiveCamera(45,1,.01,100000);camera.position.set(7,5,8);
-const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;viewport.appendChild(renderer.domElement);
+const rim=new THREE.DirectionalLight(0xffffff,2);rim.position.set(0,7,-8);scene.add(rim);
+
+const camera=new THREE.PerspectiveCamera(45,1,.01,100000);
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
+viewport.appendChild(renderer.domElement);
 const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.06;
-// Floor grid removed for a clean product view.
-let model=null,materials=[],wire=false,initial=null;
-const frameMaterials=[];
-const frameTextureCache=new Map();
-const FRAME_TEXTURES={
-  '#383E42':'https://a5spas.github.io/Garden-Pergola/Materials/ral_7024.jpg',
-  '#0A0A0A':'https://a5spas.github.io/Garden-Pergola/Materials/ral_9005.jpg'
-};
-function loadFrameTexture(url){
-  if(frameTextureCache.has(url)) return frameTextureCache.get(url);
-  const promise=new Promise((resolve,reject)=>{
-    new THREE.TextureLoader().load(url,texture=>{
-      texture.colorSpace=THREE.SRGBColorSpace;
-      texture.flipY=false;
-      texture.wrapS=THREE.RepeatWrapping; texture.wrapT=THREE.RepeatWrapping;
-      texture.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);
-      texture.needsUpdate=true; resolve(texture);
-    },undefined,()=>{frameTextureCache.delete(url);reject(new Error('Texture failed to load: '+url));});
-  });
-  frameTextureCache.set(url,promise); return promise;
+const loader=new GLTFLoader();
+const BASE='https://a5spas.github.io/Garden-Pergola/Nebbiolo/';
+const assembly=new THREE.Group();scene.add(assembly);
+let initial=null,wire=false,selectedColour='#383E42';
+const allMaterials=new Set(),frameMaterials=new Set(),textureCache=new Map();
+const loaded=new Map(); // slot keys: base, leftGable, leftOption, rightGable, rightOption, frontOption
+const FRAME_TEXTURES={'#383E42':'https://a5spas.github.io/Garden-Pergola/Materials/ral_7024.jpg','#0A0A0A':'https://a5spas.github.io/Garden-Pergola/Materials/ral_9005.jpg'};
+
+function disposeObject(root){
+  root.traverse(o=>{if(!o.isMesh)return;o.geometry?.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose());});
 }
-async function setFrameColour(hex){
-  selectedColour=hex;
-  const url=FRAME_TEXTURES[hex];
-  if(!url || !frameMaterials.length) return;
-  try{
-    const targetMaterials=frameMaterials.slice();
-    const texture=await loadFrameTexture(url);
-    // A model may have changed while the texture was loading; only update the current frame materials.
-    if(targetMaterials.some(mat=>!frameMaterials.includes(mat))) return;
-    targetMaterials.forEach(mat=>{
-      mat.map=texture; mat.color.setRGB(1,1,1);
-      if('metalness' in mat) mat.metalness=0;
-      if('roughness' in mat && mat.roughness<0.12) mat.roughness=0.35;
-      mat.needsUpdate=true;
+function registerMaterials(root){
+  root.traverse(o=>{
+    if(!o.isMesh||!o.material)return;
+    const srcs=Array.isArray(o.material)?o.material:[o.material];
+    const copies=srcs.map(src=>{
+      const mat=src.clone(),n=(src.name||'').toLowerCase();
+      allMaterials.add(mat);
+      if(n.includes('ral_7024')||n.includes('ral_9005')||n.includes('aluminium')||n.includes('aluminum')||n.includes('frame'))frameMaterials.add(mat);
+      return mat;
     });
+    o.material=Array.isArray(o.material)?copies:copies[0];
+  });
+}
+function loadTexture(url){
+  if(textureCache.has(url))return textureCache.get(url);
+  const p=new Promise((resolve,reject)=>new THREE.TextureLoader().load(url,t=>{t.colorSpace=THREE.SRGBColorSpace;t.flipY=false;t.wrapS=THREE.RepeatWrapping;t.wrapT=THREE.RepeatWrapping;t.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);resolve(t);},undefined,reject));
+  textureCache.set(url,p);return p;
+}
+async function applyFrameColour(hex){
+  selectedColour=hex;
+  try{
+    const tex=await loadTexture(FRAME_TEXTURES[hex]);
+    frameMaterials.forEach(m=>{m.map=tex;m.color.setRGB(1,1,1);if('metalness'in m)m.metalness=0;if('roughness'in m&&m.roughness<.12)m.roughness=.35;m.needsUpdate=true;});
     const label=hex==='#0A0A0A'?'RAL 9005 — Jet Black':'RAL 7024 — Graphite Grey';
     document.getElementById('selectedColour').textContent='Selected: '+label;
     document.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('selected',b.dataset.colour===hex));
-    status.textContent='Frame texture loaded: '+label+'. Roof material preserved.';
-  }catch(err){console.error(err);status.textContent='Could not load '+url+'. Check the Materials folder and filename.';}
+    status.textContent='Frame colour applied to '+frameMaterials.size+' frame material(s).';
+  }catch(e){console.error(e);status.textContent='Could not load frame texture. Check the Materials folder.';}
 }
-
-function fitModel(preserveView=false, previousView=null){
-  if(!model)return;
-  const b=new THREE.Box3().setFromObject(model);if(b.isEmpty())return;
-  const c=b.getCenter(new THREE.Vector3());model.position.sub(c);
-  const bb=new THREE.Box3().setFromObject(model),s=bb.getSize(new THREE.Vector3()),max=Math.max(s.x,s.y,s.z,.1);
+function addModel(key,root){
+  const previous=loaded.get(key);if(previous){assembly.remove(previous);disposeObject(previous);}
+  registerMaterials(root);assembly.add(root);loaded.set(key,root);
+  applyFrameColour(selectedColour);
+}
+function removeModel(key){
+  const obj=loaded.get(key);if(!obj)return;
+  assembly.remove(obj);disposeObject(obj);loaded.delete(key);
+}
+function fitAssembly(){
+  const b=new THREE.Box3().setFromObject(assembly);if(b.isEmpty())return;
+  const s=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3()),max=Math.max(s.x,s.y,s.z,.1);
   camera.near=Math.max(max/10000,.001);camera.far=max*100;camera.updateProjectionMatrix();
-  if(preserveView && previousView){
-    // Preserve the user's orbit direction and absolute camera distance.
-    // Larger length variants therefore appear larger in the viewport instead of
-    // being automatically zoomed back to the same apparent size.
-    const target=new THREE.Vector3(0,0,0);
-    const distance=Math.max(max*.15,Math.min(previousView.distance,max*15));
-    camera.position.copy(target).addScaledVector(previousView.direction,distance);
-    controls.target.copy(target);
-  }else{
-    camera.position.set(max*1.35,max*.95,max*1.55);
-    controls.target.set(0,0,0);
-  }
+  camera.position.set(c.x+max*1.35,c.y+max*.95,c.z+max*1.55);controls.target.copy(c);
   controls.minDistance=max*.15;controls.maxDistance=max*15;controls.update();
   initial={position:camera.position.clone(),target:controls.target.clone()};
-  currentModelMax=max;
-  hudStatus.textContent=`${s.x.toFixed(2)} × ${s.y.toFixed(2)} × ${s.z.toFixed(2)} model units`;
+  hudStatus.textContent='400cm × 250cm model';
 }
-let currentModelMax=1;
-function captureView(){
-  const offset=camera.position.clone().sub(controls.target);
-  const distance=offset.length();
-  return {direction:offset.normalize(),distance};
+function loadFile(path,onSuccess,onError){
+  loader.load(BASE+path,gltf=>onSuccess(gltf.scene),undefined,e=>{console.error(path,e);onError?.(path);});
 }
-document.getElementById('fit').onclick=fitModel;
+function loadBase(){
+  loadFile('Frame/Nebbiolo_Frame.glb',root=>{
+    addModel('base',root);fitAssembly();status.textContent='Main frame loaded. Choose accessories.';
+  },path=>{status.textContent='Main frame failed to load: '+path+'. Check the GitHub filename.';hudStatus.textContent='Model failed to load';});
+}
+const sideState={
+  left:{gable:false,option:null,version:0},
+  right:{gable:false,option:null,version:0}
+};
+const gablePaths={left:'Gable/Nebbiolo_Gable_left.glb',right:'Gable/Nebbiolo_Gable_right.glb'};
+function syncGableButton(side){
+  const state=sideState[side],button=document.getElementById(side+'Gable');
+  button.classList.toggle('active',state.gable);
+  button.textContent=state.gable?'✓ Gable on':'＋ Add gable';
+  button.disabled=!!state.option;
+  button.title=state.option?'Gable is required by the selected side accessory':'Toggle the side gable';
+}
+function setGable(side,on){
+  const state=sideState[side];
+  state.gable=on||!!state.option;
+  const key=side+'Gable';
+  if(state.gable&&!loaded.has(key)){
+    loadFile(gablePaths[side],root=>{if(!sideState[side].gable){disposeObject(root);return;}addModel(key,root);},path=>status.textContent='Could not load '+path);
+  }else if(!state.gable)removeModel(key);
+  syncGableButton(side);
+}
+function setSideOption(side,path,button){
+  const state=sideState[side];state.version++;
+  const version=state.version;
+  state.option=path||null;
+  // Selecting a side accessory requires its matching gable.
+  if(path)setGable(side,true);
+  else syncGableButton(side);
+  removeModel(side+'Option');
+  document.querySelectorAll('button.toggle[data-slot="'+side+'"]').forEach(b=>b.classList.toggle('active',b===button&&!!path));
+  if(!path){status.textContent=side==='left'?'Left-side option cleared.':'Right-side option cleared.';return;}
+  loadFile(path,root=>{
+    if(state.version!==version||state.option!==path){disposeObject(root);return;}
+    addModel(side+'Option',root);
+    status.textContent=(side==='left'?'Left':'Right')+' side accessory loaded with its required gable.';
+  },failed=>{if(state.version===version){state.option=null;setGable(side,false);status.textContent='Could not load '+failed+'. Check the exact GitHub filename.';}});
+}
+function setFrontOption(path,button){
+  const state=frontState;state.version++;const version=state.version;state.path=path||null;removeModel('frontOption');
+  document.querySelectorAll('button.toggle[data-slot="front"]').forEach(b=>b.classList.toggle('active',b===button&&!!path));
+  if(!path){status.textContent='Front option cleared.';return;}
+  loadFile(path,root=>{if(state.version!==version||state.path!==path){disposeObject(root);return;}addModel('frontOption',root);status.textContent='Front accessory loaded.';},failed=>{if(state.version===version){state.path=null;status.textContent='Could not load '+failed+'. Check the exact GitHub filename.';}});
+}
+const frontState={path:null,version:0};
+['left','right'].forEach(side=>{
+  document.getElementById(side+'Gable').addEventListener('click',()=>{
+    const s=sideState[side];if(s.option)return;setGable(side,!s.gable);
+  });
+});
+document.querySelectorAll('button.toggle[data-slot]').forEach(button=>button.addEventListener('click',()=>{
+  const slot=button.dataset.slot,path=button.dataset.path;
+  if(slot==='front'){setFrontOption(frontState.path===path?null:path,frontState.path===path?null:button);return;}
+  const current=sideState[slot].option;
+  setSideOption(slot,current===path?null:path,current===path?null:button);
+}));
+document.querySelectorAll('.swatch').forEach(b=>b.addEventListener('click',()=>applyFrameColour(b.dataset.colour)));
+document.getElementById('fit').onclick=fitAssembly;
 document.getElementById('reset').onclick=()=>{if(initial){camera.position.copy(initial.position);controls.target.copy(initial.target);controls.update();}};
-document.getElementById('wire').onclick=()=>{wire=!wire;materials.forEach(m=>{m.wireframe=wire;m.needsUpdate=true;});};
-
-function setStudioLighting(mode){
-  const bright=mode==='bright';
-  hemi.intensity=bright?4.0:3.2;
-  key.intensity=bright?5.5:4.2;
-  fill.intensity=bright?3.8:2.7;
-  rim.intensity=bright?2.8:2.0;
-  key.position.set(bright?3:5,bright?11:9,bright?6:7);
-  fill.position.set(bright?-6:-7,bright?5:4,bright?-4:-5);
-  rim.position.set(bright?1:0,bright?8:7,-8);
-  document.getElementById('studioSoft').classList.toggle('selected',!bright);
-  document.getElementById('studioSoft').classList.toggle('secondary',bright);
-  document.getElementById('studioBright').classList.toggle('selected',bright);
-  document.getElementById('studioBright').classList.toggle('secondary',!bright);
-  document.getElementById('lightingDescription').textContent=bright?'Brighter studio lighting with stronger highlights and more fill.':'Soft, balanced studio lighting with gentle shadows.';
-}
-document.getElementById('studioSoft').onclick=()=>setStudioLighting('soft');
-document.getElementById('studioBright').onclick=()=>setStudioLighting('bright');
-document.querySelectorAll('.swatch').forEach(button=>button.addEventListener('click',()=>setFrameColour(button.dataset.colour)));
-const loader=new GLTFLoader();
-const MODEL_BASE='https://a5spas.github.io/Garden-Pergola/Ribolla/models/';
-const WIDTH_LABELS={'250':'2.5 m','300':'3 m','350':'3.5 m','400':'4 m'};
-const LENGTHS=['4m','5m','6m'];
-let selectedWidth='250', selectedLength='4m', loadVersion=0, selectedColour='#383E42';
-function modelFilename(width,length){return 'Ribolla_'+length+'_'+width+'.glb';}
-async function loadModel(width=selectedWidth,length=selectedLength){
-  const previousView=model?captureView():null;
-  selectedWidth=width; selectedLength=length;
-  const thisLoad=++loadVersion;
-  document.querySelectorAll('.width-choice[data-width]').forEach(b=>{
-    const selected=b.dataset.width===width;
-    b.classList.toggle('selected',selected); b.classList.toggle('secondary',!selected);
-  });
-  document.querySelectorAll('.length-choice').forEach(b=>{
-    const selected=b.dataset.length===length;
-    b.classList.toggle('selected',selected); b.classList.toggle('secondary',!selected);
-  });
-  const filename=modelFilename(width,length);
-  status.textContent='Loading '+WIDTH_LABELS[width]+' wide × '+length+' long Ribolla model…';
-  hudStatus.textContent='Loading model…';
-  loader.load(MODEL_BASE+filename,gltf=>{
-    if(thisLoad!==loadVersion){
-      gltf.scene.traverse(o=>{if(o.isMesh){o.geometry?.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose());}});
-      return;
-    }
-    if(model){
-      scene.remove(model);
-      model.traverse(o=>{if(o.isMesh){o.geometry?.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose());}});
-    }
-    model=gltf.scene;
-    materials=[];frameMaterials.length=0;
-    model.traverse(o=>{
-      if(!o.isMesh || !o.material) return;
-      const mats=Array.isArray(o.material)?o.material:[o.material];
-      const updated=mats.map(original=>{
-        const mat=original.clone(); materials.push(mat);
-        const name=(original.name||'').toLowerCase();
-        // Frame material names vary between exported length variants. Prefer explicit
-        // RAL/frame names, and use a safe non-glass fallback for differently named frames.
-        if(name.includes('ral_7024') || name.includes('ral_9005') || name.includes('frame') || name.includes('aluminium') || name.includes('aluminum')) frameMaterials.push(mat);
-        else if(!name.includes('glass') && !name.includes('polycarb') && !name.includes('roof') && !name.includes('transparent')) frameMaterials.push(mat);
-        return mat;
-      });
-      o.material=Array.isArray(o.material)?updated:updated[0];
-    });
-    scene.add(model);
-    fitModel(!!previousView,previousView);
-    if(frameMaterials.length===0){
-      status.textContent='Model loaded, but no RAL frame material was detected. Check the exported GLB material names.';
-    }else{
-      status.textContent='Model loaded. Frame colour and roof material controls are ready.';
-      setFrameColour(selectedColour);
-    }
-    hudStatus.textContent=WIDTH_LABELS[width]+' wide × '+length+' long Ribolla';
-  },undefined,e=>{
-    if(thisLoad!==loadVersion)return;
-    console.error('Ribolla GLB load error:',e);
-    status.textContent='Model failed to load: '+(e?.message||'unknown error')+'. Check that '+filename+' exists in Ribolla/models.';
-    hudStatus.textContent='Model failed to load';
-  });
-}
-document.querySelectorAll('.width-choice[data-width]').forEach(button=>button.addEventListener('click',()=>loadModel(button.dataset.width,selectedLength)));
-document.querySelectorAll('.length-choice').forEach(button=>button.addEventListener('click',()=>loadModel(selectedWidth,button.dataset.length)));
-loadModel('250','4m');
-function resize(){const w=viewport.clientWidth,h=viewport.clientHeight;camera.aspect=w/Math.max(h,1);camera.updateProjectionMatrix();renderer.setSize(w,h,false);}new ResizeObserver(resize).observe(viewport);resize();
+document.getElementById('wire').onclick=()=>{wire=!wire;allMaterials.forEach(m=>{m.wireframe=wire;m.needsUpdate=true;});};
+function resize(){const w=viewport.clientWidth,h=viewport.clientHeight;camera.aspect=w/Math.max(h,1);camera.updateProjectionMatrix();renderer.setSize(w,h,false);}
+new ResizeObserver(resize).observe(viewport);resize();
 renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera);});
+loadBase();
 </script>
 </body>
 </html>

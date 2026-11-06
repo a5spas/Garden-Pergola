@@ -33,6 +33,14 @@ button.action.secondary{background:#eef1f4;color:#26313d;border:1px solid #d2d8d
 .hint{font-size:11px;color:var(--muted);margin-top:14px}
 .dependency-note{font-size:11px;color:#657181;margin-top:7px}
 @media(max-width:850px){.app{height:auto;min-height:100vh;grid-template-columns:1fr}#viewport{height:60vh;min-height:400px;grid-row:1}aside{border-left:0;border-top:1px solid var(--line)}}
+
+.render-modal{display:none;position:fixed;inset:0;z-index:50;background:rgba(13,18,24,.82);padding:24px;align-items:center;justify-content:center}
+.render-modal.open{display:flex}
+.render-dialog{width:min(1200px,96vw);max-height:92vh;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 18px 60px #0006}
+.render-toolbar{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #dce1e7;color:#202833}
+.render-close{border:0;border-radius:7px;background:#eef1f4;color:#202833;padding:7px 11px;font-size:16px;cursor:pointer}
+#lifestyleRender{display:block;width:100%;max-height:calc(92vh - 48px);object-fit:contain;background:#f4f4f4}
+
 </style>
 </head>
 <body>
@@ -113,9 +121,21 @@ button.action.secondary{background:#eef1f4;color:#26313d;border:1px solid #d2d8d
 <button class="action" id="fit">Fit model in view</button>
 <button class="action secondary" id="reset">Reset camera</button>
 <button class="action secondary" id="wire">Toggle wireframe</button>
+<button class="action secondary" id="showRender">View lifestyle render</button>
 </section>
 <p class="hint">Drag to orbit, use the mouse wheel to zoom, and right-drag to pan. More accessory options can be added to this button-based layout as the configurator develops.</p>
 </aside>
+</div>
+
+
+<div id="renderModal" class="render-modal" aria-hidden="true">
+  <div class="render-dialog" role="dialog" aria-modal="true" aria-label="Nebbiolo lifestyle render">
+    <div class="render-toolbar">
+      <strong>Nebbiolo — lifestyle render</strong>
+      <button type="button" class="render-close" id="closeRender" aria-label="Close render">✕</button>
+    </div>
+    <img id="lifestyleRender" src="https://a5spas.github.io/Garden-Pergola/Nebbiolo/Nebbiolo_Render.png" alt="Nebbiolo pergola against a stone house at dusk">
+  </div>
 </div>
 
 <script type="importmap">
@@ -266,6 +286,24 @@ document.querySelectorAll('button.toggle[data-slot]').forEach(button=>button.add
 document.querySelectorAll('.swatch').forEach(b=>b.addEventListener('click',()=>applyFrameColour(b.dataset.colour)));
 document.getElementById('fit').onclick=fitAssembly;
 document.getElementById('reset').onclick=()=>{if(initial){camera.position.copy(initial.position);controls.target.copy(initial.target);controls.update();}};
+
+const renderModal=document.getElementById('renderModal');
+function openRender(){renderModal.classList.add('open');renderModal.setAttribute('aria-hidden','false');}
+function closeRender(){renderModal.classList.remove('open');renderModal.setAttribute('aria-hidden','true');}
+document.getElementById('showRender').addEventListener('click',openRender);
+document.getElementById('closeRender').addEventListener('click',closeRender);
+renderModal.addEventListener('click',e=>{if(e.target===renderModal)closeRender();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeRender();});
+
+
+const renderModal=document.getElementById('renderModal');
+function openLifestyleRender(){renderModal.classList.add('open');renderModal.setAttribute('aria-hidden','false');}
+function closeLifestyleRender(){renderModal.classList.remove('open');renderModal.setAttribute('aria-hidden','true');}
+document.getElementById('showRender').addEventListener('click',openLifestyleRender);
+document.getElementById('closeRender').addEventListener('click',closeLifestyleRender);
+renderModal.addEventListener('click',event=>{if(event.target===renderModal)closeLifestyleRender();});
+document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLifestyleRender();});
+
 document.getElementById('wire').onclick=()=>{wire=!wire;allMaterials.forEach(m=>{m.wireframe=wire;m.needsUpdate=true;});};
 function resize(){const w=viewport.clientWidth,h=viewport.clientHeight;camera.aspect=w/Math.max(h,1);camera.updateProjectionMatrix();renderer.setSize(w,h,false);}
 new ResizeObserver(resize).observe(viewport);resize();

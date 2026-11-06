@@ -287,13 +287,6 @@ document.querySelectorAll('.swatch').forEach(b=>b.addEventListener('click',()=>a
 document.getElementById('fit').onclick=fitAssembly;
 document.getElementById('reset').onclick=()=>{if(initial){camera.position.copy(initial.position);controls.target.copy(initial.target);controls.update();}};
 
-const renderModal=document.getElementById('renderModal');
-function openRender(){renderModal.classList.add('open');renderModal.setAttribute('aria-hidden','false');}
-function closeRender(){renderModal.classList.remove('open');renderModal.setAttribute('aria-hidden','true');}
-document.getElementById('showRender').addEventListener('click',openRender);
-document.getElementById('closeRender').addEventListener('click',closeRender);
-renderModal.addEventListener('click',e=>{if(e.target===renderModal)closeRender();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeRender();});
 
 
 const renderModal=document.getElementById('renderModal');

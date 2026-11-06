@@ -6,10 +6,12 @@
 <title>Nebbiolo Pergola Configurator Test</title>
 <style>
 :root{color-scheme:light;--panel:#fff;--line:#dce1e7;--text:#202833;--muted:#657181;--accent:#273746;--active:#273746}
-*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f2f4f6;color:var(--text)}
-.app{min-height:100vh;height:100vh;display:grid;grid-template-columns:minmax(0,1fr) 370px}
-#viewport{position:relative;min-width:0;height:100vh;overflow:hidden;background:#fff}
-canvas{display:block;width:100%;height:100%}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f2f4f6;color:var(--text)}
+body{overflow-x:hidden}
+.app{min-height:100vh;min-height:100dvh;height:100vh;height:100dvh;display:grid;grid-template-columns:minmax(0,1fr) 370px}
+#viewport{position:relative;min-width:0;height:100vh;height:100dvh;overflow:hidden;background:#fff;touch-action:pan-y}
+#viewport canvas{display:block;width:100%;height:100%;touch-action:none}
 .hud{position:absolute;left:16px;top:16px;background:#ffffffdf;border:1px solid var(--line);padding:10px 12px;border-radius:10px;color:#26313d;pointer-events:none}
 .hud strong{display:block;margin-bottom:2px}
 aside{padding:20px;background:var(--panel);border-left:1px solid var(--line);overflow:auto}
@@ -18,28 +20,61 @@ p{color:var(--muted);margin:0 0 12px}.status{padding:10px;border-radius:9px;back
 section{margin-top:17px;padding-top:14px;border-top:1px solid var(--line)}
 .section-note{font-size:12px;margin-bottom:9px}
 .swatches{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px}
-button.swatch{width:34px;height:34px;padding:0;border-radius:50%;background:var(--swatch);border:2px solid #aab2bc;box-shadow:inset 0 0 0 2px white;cursor:pointer}
+button.swatch{width:40px;height:40px;flex:0 0 40px;padding:0;border-radius:50%;background:var(--swatch);border:2px solid #aab2bc;box-shadow:inset 0 0 0 2px white;cursor:pointer;touch-action:manipulation}
 button.swatch.selected{outline:2px solid #273746;outline-offset:2px}
 .selected-colour{font-size:12px;color:var(--muted);margin-top:9px}
 .option-group{margin-top:11px}
 .option-heading{font-size:12px;font-weight:700;margin-bottom:7px}
 .toggle-list{display:flex;flex-wrap:wrap;gap:7px}
-button.toggle{background:#f4f6f8;color:#344150;border:1px solid #cfd6de;border-radius:7px;padding:7px 10px;font-size:12px;font-weight:600;cursor:pointer;transition:.12s}
+button.toggle{background:#f4f6f8;color:#344150;border:1px solid #cfd6de;border-radius:7px;padding:9px 12px;min-height:40px;font-size:12px;font-weight:600;cursor:pointer;transition:.12s;touch-action:manipulation}
 button.toggle:hover{border-color:#778595}
 button.toggle.active{background:#273746;color:white;border-color:#273746}
 button.toggle:disabled{opacity:.5;cursor:not-allowed}
-button.action{background:#273746;color:white;border:0;border-radius:8px;padding:9px 11px;font-weight:650;cursor:pointer;margin:4px 5px 0 0}
+button.action{background:#273746;color:white;border:0;border-radius:8px;padding:10px 13px;min-height:42px;font-weight:650;cursor:pointer;margin:4px 5px 0 0;touch-action:manipulation}
 button.action.secondary{background:#eef1f4;color:#26313d;border:1px solid #d2d8df}
 .hint{font-size:11px;color:var(--muted);margin-top:14px}
 .dependency-note{font-size:11px;color:#657181;margin-top:7px}
-@media(max-width:850px){.app{height:auto;min-height:100vh;grid-template-columns:1fr}#viewport{height:60vh;min-height:400px;grid-row:1}aside{border-left:0;border-top:1px solid var(--line)}}
+/* Responsive layout: keep the viewer beside the controls on wide screens,
+   then stack the viewer above the controls on tablet and mobile. */
+@media(max-width:950px){
+  .app{height:auto;min-height:100vh;min-height:100dvh;grid-template-columns:minmax(0,1fr)}
+  #viewport{grid-row:1;height:clamp(340px,56svh,560px);min-height:340px}
+  aside{grid-row:2;border-left:0;border-top:1px solid var(--line);padding:20px clamp(16px,3vw,28px) 28px;overflow:visible}
+}
+@media(max-width:600px){
+  body{font-size:14px}
+  #viewport{height:48svh;min-height:300px;max-height:440px}
+  .hud{left:10px;top:10px;padding:8px 10px;font-size:12px;max-width:calc(100% - 20px)}
+  aside{padding:17px 14px 24px}
+  h1{font-size:20px}
+  section{margin-top:15px;padding-top:13px}
+  .toggle-list{gap:8px}
+  button.toggle{flex:1 1 auto;min-width:calc(50% - 8px);padding:10px 9px;min-height:42px}
+  .swatches{gap:14px}
+  button.swatch{width:44px;height:44px;flex-basis:44px}
+  button.action{min-height:44px;margin:5px 4px 0 0}
+  .render-modal{padding:10px}
+  .render-dialog{width:100%;max-height:94svh;border-radius:10px}
+  .render-toolbar{padding:10px 12px;gap:10px}
+  #lifestyleRender{max-height:calc(94svh - 54px)}
+}
+@media(max-width:380px){
+  button.toggle{min-width:100%;}
+  .option-heading{margin-bottom:6px}
+}
+@media(orientation:landscape) and (max-height:520px) and (max-width:950px){
+  .app{grid-template-columns:minmax(0,1fr) 320px;min-height:100dvh;height:100dvh}
+  #viewport{grid-column:1;grid-row:1;height:100dvh;min-height:0}
+  aside{grid-column:2;grid-row:1;max-height:100dvh;overflow:auto;border-top:0;border-left:1px solid var(--line);padding:14px}
+  button.toggle{min-width:0}
+}
 
-.render-modal{display:none;position:fixed;inset:0;z-index:50;background:rgba(13,18,24,.82);padding:24px;align-items:center;justify-content:center}
+.render-modal{display:none;position:fixed;inset:0;z-index:50;background:rgba(13,18,24,.82);padding:24px;align-items:center;justify-content:center;overscroll-behavior:contain}
 .render-modal.open{display:flex}
 .render-dialog{width:min(1200px,96vw);max-height:92vh;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 18px 60px #0006}
 .render-toolbar{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #dce1e7;color:#202833}
 .render-close{border:0;border-radius:7px;background:#eef1f4;color:#202833;padding:7px 11px;font-size:16px;cursor:pointer}
-#lifestyleRender{display:block;width:100%;max-height:calc(92vh - 48px);object-fit:contain;background:#f4f4f4}
+#lifestyleRender{display:block;width:100%;max-height:calc(92vh - 48px);max-height:calc(92dvh - 48px);object-fit:contain;background:#f4f4f4}
 
 </style>
 </head>

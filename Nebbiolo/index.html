@@ -32,9 +32,11 @@ section{margin-top:21px;padding-top:17px;border-top:1px solid var(--line)}.secti
 <div class="panel-eyebrow">Build your pergola</div><h1 id="panelTitle">Nebbiolo</h1><p class="intro">Configure your frame finish and choose accessories for each side.</p>
 <div class="status" id="status">Loading main frame…</div>
 <section><div class="section-head"><h2>Frame colour</h2><span class="step">01</span></div><p class="section-note">Choose your aluminium finish.</p><div class="swatches"><button class="swatch selected" data-colour="#383E42" aria-label="RAL 7024 Graphite Grey" title="RAL 7024 Graphite Grey" style="--swatch:#383E42"></button><button class="swatch" data-colour="#0A0A0A" aria-label="RAL 9005 Jet Black" title="RAL 9005 Jet Black" style="--swatch:#0A0A0A"></button></div><div id="selectedColour" class="selected-colour">Selected: RAL 7024 — Graphite Grey</div></section>
-<section><div class="section-head"><h2>Side configurations</h2><span class="step">02</span></div><p class="section-note">Choose an option independently for each side. You can configure both sides at once.</p>
-<label class="field-label" for="leftSelect">Left side</label><div class="select-wrap"><select class="option-select" id="leftSelect"><option value="">No side option</option><option value="Sidewall/Nebbiolo_Sidewall_Glass_Left.glb">Glass wall</option><option value="Sidewall/Nebbiolo_Sidewall_Polycarbonate_Left.glb">Clear polycarbonate</option><option value="Sidewall/Nebbiolo_Sidewall_Polycarbonate_Grey_Left.glb">Grey polycarbonate</option><option value="Sidewall/Nebbiolo_Sidewall_Polycarbonate_Cream_Left.glb">Cream polycarbonate</option><option value="Sliding_Doors/Nebbiolo_Sliding_Door_Left.glb">Sliding doors</option><option value="Steel_Look_Doors/Nebbiolo_Steel_Look_Doors_Left.glb">Steel-look doors</option></select></div><div class="dependency-note">A matching left gable is automatically included whenever a side option is selected.</div>
-<label class="field-label" for="rightSelect">Right side</label><div class="select-wrap"><select class="option-select" id="rightSelect"><option value="">No side option</option><option value="Sidewall/Nebbiolo_Sidewall_Glass_Right.glb">Glass wall</option><option value="Sidewall/Nebbiolo_Sidewall_Polycarbonate_Right.glb">Clear polycarbonate</option><option value="Sidewall/Nebbiolo_Sidewall_Polycarbonate_Grey_Right.glb">Grey polycarbonate</option><option value="Sidewall/Nebbiolo_Sidewall_Polycarbonate_Cream_Right.glb">Cream polycarbonate</option><option value="Sliding_Doors/Nebbiolo_Sliding_Door_Right.glb">Sliding doors</option><option value="Steel_Look_Doors/Nebbiolo_Steel_Look_Doors_Right.glb">Steel-look doors</option></select></div><div class="dependency-note">A matching right gable is automatically included whenever a side option is selected.</div>
+<section><div class="section-head"><h2>Side configurations</h2><span class="step">02</span></div><p class="section-note">Choose one accessory for each side. Gable finishes can be selected independently.</p>
+<label class="field-label" for="leftGableSelect">Left gable finish</label><div class="select-wrap"><select class="option-select" id="leftGableSelect"><option value="">No gable</option><option value="glass">Glass</option><option value="poly_clear">Clear polycarbonate</option><option value="poly_opaque">Opaque polycarbonate</option><option value="poly_cream">Cream polycarbonate</option><option value="poly_grey">Grey polycarbonate</option></select></div>
+<label class="field-label" for="leftSelect">Left side accessory</label><div class="select-wrap"><select class="option-select" id="leftSelect"><option value="">No side option</option><optgroup label="Full-height side wall"><option value="wall:glass">Glass</option><option value="wall:poly_clear">Clear polycarbonate</option><option value="wall:poly_opaque">Opaque polycarbonate</option><option value="wall:poly_cream">Cream polycarbonate</option><option value="wall:poly_grey">Grey polycarbonate</option></optgroup><optgroup label="Panels and doors"><option value="louvre">Louvred panel</option><option value="grillo">Grillo panel</option><option value="sliding">Sliding doors</option><option value="steel">Steel-look doors</option></optgroup></select></div><div class="dependency-note" id="leftDependency">Louvred panels automatically include the left gable. Full-height walls and Grillo panels do not require one.</div>
+<label class="field-label" for="rightGableSelect">Right gable finish</label><div class="select-wrap"><select class="option-select" id="rightGableSelect"><option value="">No gable</option><option value="glass">Glass</option><option value="poly_clear">Clear polycarbonate</option><option value="poly_opaque">Opaque polycarbonate</option><option value="poly_cream">Cream polycarbonate</option><option value="poly_grey">Grey polycarbonate</option></select></div>
+<label class="field-label" for="rightSelect">Right side accessory</label><div class="select-wrap"><select class="option-select" id="rightSelect"><option value="">No side option</option><optgroup label="Full-height side wall"><option value="wall:glass">Glass</option><option value="wall:poly_clear">Clear polycarbonate</option><option value="wall:poly_opaque">Opaque polycarbonate</option><option value="wall:poly_cream">Cream polycarbonate</option><option value="wall:poly_grey">Grey polycarbonate</option></optgroup><optgroup label="Panels and doors"><option value="louvre">Louvred panel</option><option value="grillo">Grillo panel</option><option value="sliding">Sliding doors</option><option value="steel">Steel-look doors</option></optgroup></select></div><div class="dependency-note" id="rightDependency">Louvred panels automatically include the right gable. Full-height walls and Grillo panels do not require one.</div>
 </section>
 <section><div class="section-head"><h2>Front configuration</h2><span class="step">03</span></div><p class="section-note">Choose the front enclosure.</p><label class="field-label" for="frontSelect">Front option</label><div class="select-wrap"><select class="option-select" id="frontSelect"><option value="">Open front</option><option value="Sliding_Doors/Nebbiolo_Sliding_Door_Front.glb">Sliding doors</option><option value="Steel_Look_Doors/Nebbiolo_Steel_Look_Doors_Front.glb">Steel-look doors</option></select></div></section>
 <section><div class="section-head"><h2>Preview controls</h2><span class="step">04</span></div><div class="action-row"><button class="action" id="fit">Fit model</button><button class="action secondary" id="reset">Reset camera</button><button class="action secondary" id="showRender">Lifestyle render</button></div><p class="hint">Drag to orbit, scroll or pinch to zoom, and right-drag to pan. Choose multiple configurations across the left, right and front positions.</p></section>
@@ -48,167 +50,47 @@ section{margin-top:21px;padding-top:17px;border-top:1px solid var(--line)}.secti
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-
-const viewport=document.getElementById('viewport');
-const status=document.getElementById('status');
-const hudStatus=document.getElementById('hudStatus');
+const viewport=document.getElementById('viewport'),status=document.getElementById('status'),hudStatus=document.getElementById('hudStatus');
 const scene=new THREE.Scene();scene.background=new THREE.Color(0xffffff);
-const hemi=new THREE.HemisphereLight(0xffffff,0x7b8490,3.2);scene.add(hemi);
+scene.add(new THREE.HemisphereLight(0xffffff,0x7b8490,3.2));
 const key=new THREE.DirectionalLight(0xffffff,4.2);key.position.set(5,9,7);scene.add(key);
 const fill=new THREE.DirectionalLight(0xe3edff,2.7);fill.position.set(-7,4,-5);scene.add(fill);
 const rim=new THREE.DirectionalLight(0xffffff,2);rim.position.set(0,7,-8);scene.add(rim);
-
-const camera=new THREE.PerspectiveCamera(45,1,.01,100000);
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
-renderer.outputColorSpace=THREE.SRGBColorSpace;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
-viewport.appendChild(renderer.domElement);
+const camera=new THREE.PerspectiveCamera(45,1,.01,100000),renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;viewport.appendChild(renderer.domElement);
 const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.06;
-const loader=new GLTFLoader();
-const BASE='https://a5spas.github.io/Garden-Pergola/Nebbiolo/';
-const assembly=new THREE.Group();scene.add(assembly);
-let initial=null,selectedColour='#383E42';
-const allMaterials=new Set(),frameMaterials=new Set(),textureCache=new Map();
-const loaded=new Map(); // slot keys: base, leftGable, leftOption, rightGable, rightOption, frontOption
+const loader=new GLTFLoader(),BASE='https://a5spas.github.io/Garden-Pergola/Nebbiolo/';
+const assembly=new THREE.Group();scene.add(assembly);let initial=null,selectedColour='#383E42';
+const frameMaterials=new Set(),textureCache=new Map(),loaded=new Map();
 const FRAME_TEXTURES={'#383E42':'https://a5spas.github.io/Garden-Pergola/Materials/ral_7024.jpg','#0A0A0A':'https://a5spas.github.io/Garden-Pergola/Materials/ral_9005.jpg'};
-
-function disposeObject(root){
-  root.traverse(o=>{if(!o.isMesh)return;o.geometry?.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose());});
+const MATERIALS={glass:'glass',poly_clear:'poly_clear',poly_opaque:'poly_opaque',poly_cream:'poly_cream',poly_grey:'poly_grey'};
+function disposeObject(root){root.traverse(o=>{if(!o.isMesh)return;o.geometry?.dispose();(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose());});}
+function registerMaterials(root){root.traverse(o=>{if(!o.isMesh||!o.material)return;const srcs=Array.isArray(o.material)?o.material:[o.material];const copies=srcs.map(src=>{const mat=src.clone(),n=(src.name||'').toLowerCase();if(n.includes('ral_7024')||n.includes('ral_9005')||n.includes('aluminium')||n.includes('aluminum')||n.includes('frame'))frameMaterials.add(mat);return mat;});o.material=Array.isArray(o.material)?copies:copies[0];});}
+function loadTexture(url){if(textureCache.has(url))return textureCache.get(url);const p=new Promise((resolve,reject)=>new THREE.TextureLoader().load(url,t=>{t.colorSpace=THREE.SRGBColorSpace;t.flipY=false;t.wrapS=THREE.RepeatWrapping;t.wrapT=THREE.RepeatWrapping;t.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);resolve(t);},undefined,reject));textureCache.set(url,p);return p;}
+async function applyFrameColour(hex){selectedColour=hex;try{const tex=await loadTexture(FRAME_TEXTURES[hex]);frameMaterials.forEach(m=>{m.map=tex;m.color.setRGB(1,1,1);if('metalness'in m)m.metalness=0;if('roughness'in m&&m.roughness<.12)m.roughness=.35;m.needsUpdate=true;});const label=hex==='#0A0A0A'?'RAL 9005 — Jet Black':'RAL 7024 — Graphite Grey';document.getElementById('selectedColour').textContent='Selected: '+label;document.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('selected',b.dataset.colour===hex));}catch(e){console.error(e);status.textContent='Could not load frame texture. Check the Materials folder.';}}
+function addModel(slot,root){removeModel(slot);registerMaterials(root);assembly.add(root);loaded.set(slot,root);applyFrameColour(selectedColour);}
+function removeModel(slot){const obj=loaded.get(slot);if(!obj)return;assembly.remove(obj);disposeObject(obj);loaded.delete(slot);}
+function loadFile(path,success,failure){loader.load(BASE+path,g=>success(g.scene),undefined,e=>{console.error('GLB load failed:',path,e);failure?.(path);});}
+function fitAssembly(){const b=new THREE.Box3().setFromObject(assembly);if(b.isEmpty())return;const size=b.getSize(new THREE.Vector3()),center=b.getCenter(new THREE.Vector3()),max=Math.max(size.x,size.y,size.z,.1);camera.near=Math.max(max/10000,.001);camera.far=max*100;camera.updateProjectionMatrix();camera.position.set(center.x+max*1.35,center.y+max*.95,center.z+max*1.55);controls.target.copy(center);controls.minDistance=max*.15;controls.maxDistance=max*15;controls.update();initial={position:camera.position.clone(),target:controls.target.clone()};hudStatus.textContent='400cm × 250cm model';}
+function baseLoad(){loadFile('Frame/nebbiolo_frame.glb',root=>{addModel('base',root);fitAssembly();status.textContent='Nebbiolo frame loaded. Choose your accessories.';},path=>{status.textContent='Could not load '+path+'. Check the GitHub filename.';hudStatus.textContent='Model failed to load';});}
+const sideState={left:{version:0,gableVersion:0,option:''},right:{version:0,gableVersion:0,option:''}};
+function gablePath(side,finish){return `Side_Gable/nebbiolo_side_gable_${side}_${MATERIALS[finish]||'glass'}_400_250.glb`;}
+function sideAccessoryPath(side,value){if(!value)return null;const [kind,finish]=value.split(':');if(kind==='wall')return `Sidewall/nebbiolo_sidewall_${side}_${MATERIALS[finish]}_400_250.glb`;if(kind==='louvre')return `Louvre_Panel/nebbiolo_louvre_panel_${side}_400_250.glb`;if(kind==='grillo')return `Grillo_Panel/nebbiolo_grillo_panel_${side}_400_250.glb`;if(kind==='sliding')return `Sliding_Doors/nebbiolo_sliding_door_${side}.glb`;if(kind==='steel')return `Steel_Look_Doors/nebbiolo_steel_look_doors_${side}.glb`;return null;}
+function requiresGable(value){return !!value&&['louvre','sliding','steel'].includes(value.split(':')[0]);}
+function updateGable(side,force){const selector=document.getElementById(side+'GableSelect');if(requiresGable(sideState[side].option)&&!selector.value)selector.value='glass';const value=selector.value||'glass',needed=force??requiresGable(sideState[side].option);const slot=side+'Gable';if(!needed){removeModel(slot);return;}const path=gablePath(side,value);const token=++sideState[side].gableVersion;loadFile(path,root=>{if(token!==sideState[side].gableVersion||!(selector.value||'glass')){disposeObject(root);return;}addModel(slot,root);},failed=>status.textContent='Could not load gable: '+failed);}
+async function updateSide(side){const state=sideState[side];state.version++;const version=state.version,value=document.getElementById(side+'Select').value;state.option=value;removeModel(side+'Option');updateGable(side);const path=sideAccessoryPath(side,value);if(!path){status.textContent=`${side==='left'?'Left':'Right'} side cleared.`;return;}loadFile(path,root=>{if(state.version!==version||state.option!==value){disposeObject(root);return;}addModel(side+'Option',root);status.textContent=`${side==='left'?'Left':'Right'} side accessory loaded.`;},failed=>{if(state.version===version){state.option='';document.getElementById(side+'Select').value='';updateGable(side);status.textContent='Could not load '+failed+'. Check the exact filename.';}});}
+for(const side of ['left','right']){
+ document.getElementById(side+'Select').addEventListener('change',()=>updateSide(side));
+ document.getElementById(side+'GableSelect').addEventListener('change',()=>{if(requiresGable(sideState[side].option))updateGable(side);else if(document.getElementById(side+'GableSelect').value)updateGable(side,true);else removeModel(side+'Gable');});
 }
-function registerMaterials(root){
-  root.traverse(o=>{
-    if(!o.isMesh||!o.material)return;
-    const srcs=Array.isArray(o.material)?o.material:[o.material];
-    const copies=srcs.map(src=>{
-      const mat=src.clone(),n=(src.name||'').toLowerCase();
-      allMaterials.add(mat);
-      if(n.includes('ral_7024')||n.includes('ral_9005')||n.includes('aluminium')||n.includes('aluminum')||n.includes('frame'))frameMaterials.add(mat);
-      return mat;
-    });
-    o.material=Array.isArray(o.material)?copies:copies[0];
-  });
-}
-function loadTexture(url){
-  if(textureCache.has(url))return textureCache.get(url);
-  const p=new Promise((resolve,reject)=>new THREE.TextureLoader().load(url,t=>{t.colorSpace=THREE.SRGBColorSpace;t.flipY=false;t.wrapS=THREE.RepeatWrapping;t.wrapT=THREE.RepeatWrapping;t.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);resolve(t);},undefined,reject));
-  textureCache.set(url,p);return p;
-}
-async function applyFrameColour(hex){
-  selectedColour=hex;
-  try{
-    const tex=await loadTexture(FRAME_TEXTURES[hex]);
-    frameMaterials.forEach(m=>{m.map=tex;m.color.setRGB(1,1,1);if('metalness'in m)m.metalness=0;if('roughness'in m&&m.roughness<.12)m.roughness=.35;m.needsUpdate=true;});
-    const label=hex==='#0A0A0A'?'RAL 9005 — Jet Black':'RAL 7024 — Graphite Grey';
-    document.getElementById('selectedColour').textContent='Selected: '+label;
-    document.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('selected',b.dataset.colour===hex));
-    status.textContent='Frame colour applied to '+frameMaterials.size+' frame material(s).';
-  }catch(e){console.error(e);status.textContent='Could not load frame texture. Check the Materials folder.';}
-}
-function addModel(key,root){
-  const previous=loaded.get(key);if(previous){assembly.remove(previous);disposeObject(previous);}
-  registerMaterials(root);assembly.add(root);loaded.set(key,root);
-  applyFrameColour(selectedColour);
-}
-function removeModel(key){
-  const obj=loaded.get(key);if(!obj)return;
-  assembly.remove(obj);disposeObject(obj);loaded.delete(key);
-}
-function fitAssembly(){
-  const b=new THREE.Box3().setFromObject(assembly);if(b.isEmpty())return;
-  const s=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3()),max=Math.max(s.x,s.y,s.z,.1);
-  camera.near=Math.max(max/10000,.001);camera.far=max*100;camera.updateProjectionMatrix();
-  camera.position.set(c.x+max*1.35,c.y+max*.95,c.z+max*1.55);controls.target.copy(c);
-  controls.minDistance=max*.15;controls.maxDistance=max*15;controls.update();
-  initial={position:camera.position.clone(),target:controls.target.clone()};
-  hudStatus.textContent='400cm × 250cm model';
-}
-function loadFile(path,onSuccess,onError){
-  loader.load(BASE+path,gltf=>onSuccess(gltf.scene),undefined,e=>{console.error(path,e);onError?.(path);});
-}
-function loadBase(){
-  loadFile('Frame/Nebbiolo_Frame.glb',root=>{
-    addModel('base',root);fitAssembly();status.textContent='Main frame loaded. Choose accessories.';
-  },path=>{status.textContent='Main frame failed to load: '+path+'. Check the GitHub filename.';hudStatus.textContent='Model failed to load';});
-}
-const sideState={
-  left:{gable:false,option:null,version:0},
-  right:{gable:false,option:null,version:0}
-};
-const gablePaths={left:'Gable/Nebbiolo_Gable_left.glb',right:'Gable/Nebbiolo_Gable_right.glb'};
-function syncGableButton(side){ /* gables are managed automatically by the side selectors */ }
-function setGable(side,on){
-  const state=sideState[side];
-  state.gable=on||!!state.option;
-  const key=side+'Gable';
-  if(state.gable&&!loaded.has(key)){
-    loadFile(gablePaths[side],root=>{if(!sideState[side].gable){disposeObject(root);return;}addModel(key,root);},path=>status.textContent='Could not load '+path);
-  }else if(!state.gable)removeModel(key);
-  syncGableButton(side);
-}
-function setSideOption(side,path,button){
-  const state=sideState[side];state.version++;
-  const version=state.version;
-  state.option=path||null;
-  // Selecting a side accessory requires its matching gable.
-  if(path)setGable(side,true);
-  else setGable(side,false);
-  removeModel(side+'Option');
-  document.querySelectorAll('button.toggle[data-slot="'+side+'"]').forEach(b=>b.classList.toggle('active',b===button&&!!path));
-  if(!path){status.textContent=side==='left'?'Left-side option cleared.':'Right-side option cleared.';return;}
-  loadFile(path,root=>{
-    if(state.version!==version||state.option!==path){disposeObject(root);return;}
-    addModel(side+'Option',root);
-    status.textContent=(side==='left'?'Left':'Right')+' side accessory loaded with its required gable.';
-  },failed=>{if(state.version===version){state.option=null;setGable(side,false);status.textContent='Could not load '+failed+'. Check the exact GitHub filename.';}});
-}
-function setFrontOption(path,button){
-  const state=frontState;state.version++;const version=state.version;state.path=path||null;removeModel('frontOption');
-  document.querySelectorAll('button.toggle[data-slot="front"]').forEach(b=>b.classList.toggle('active',b===button&&!!path));
-  if(!path){status.textContent='Front option cleared.';return;}
-  loadFile(path,root=>{if(state.version!==version||state.path!==path){disposeObject(root);return;}addModel('frontOption',root);status.textContent='Front accessory loaded.';},failed=>{if(state.version===version){state.path=null;status.textContent='Could not load '+failed+'. Check the exact GitHub filename.';}});
-}
-const frontState={path:null,version:0};
-['left','right'].forEach(side=>{
-  document.getElementById(side+'Select').addEventListener('change',event=>{
-    const path=event.target.value||null;
-    setSideOption(side,path,null);
-  });
-});
-document.getElementById('frontSelect').addEventListener('change',event=>setFrontOption(event.target.value||null,null));
-document.querySelectorAll('.product-tab').forEach(tab=>tab.addEventListener('click',()=>{
-  const product=tab.dataset.product;
-  document.querySelectorAll('.product-tab').forEach(t=>t.classList.toggle('active',t===tab));
-  if(product!=='Nebbiolo'){
-    status.textContent=product.replaceAll('_',' ')+' has been added to the model selector, but its 3D assets and option mappings still need to be connected.';
-    document.getElementById('panelTitle').textContent=product.replaceAll('_',' ');
-    document.getElementById('hudTitle').textContent=product.replaceAll('_',' ')+' preview';
-    hudStatus.textContent='Model assets not connected yet';
-  }else{
-    document.getElementById('panelTitle').textContent='Nebbiolo';
-    document.getElementById('hudTitle').textContent='Nebbiolo preview';
-    hudStatus.textContent='400cm × 250cm model';
-    status.textContent='Nebbiolo model selected.';
-  }
-}));
+const frontState={version:0,path:''};
+function updateFront(){const value=document.getElementById('frontSelect').value;frontState.version++;const version=frontState.version;frontState.path=value;removeModel('frontOption');if(!value)return;loadFile(value,root=>{if(frontState.version!==version||frontState.path!==value){disposeObject(root);return;}addModel('frontOption',root);status.textContent='Front accessory loaded.';},failed=>status.textContent='Could not load '+failed+'. Check the exact filename.');}
+document.getElementById('frontSelect').addEventListener('change',updateFront);
+document.querySelectorAll('.product-tab').forEach(tab=>tab.addEventListener('click',()=>{const product=tab.dataset.product;document.querySelectorAll('.product-tab').forEach(t=>t.classList.toggle('active',t===tab));if(product!=='Nebbiolo'){status.textContent=product.replaceAll('_',' ')+' model assets are not connected yet.';document.getElementById('panelTitle').textContent=product.replaceAll('_',' ');document.getElementById('hudTitle').textContent=product.replaceAll('_',' ')+' preview';hudStatus.textContent='Model assets not connected yet';}else{document.getElementById('panelTitle').textContent='Nebbiolo';document.getElementById('hudTitle').textContent='Nebbiolo preview';hudStatus.textContent='400cm × 250cm model';status.textContent='Nebbiolo selected.';}}));
 document.querySelectorAll('.swatch').forEach(b=>b.addEventListener('click',()=>applyFrameColour(b.dataset.colour)));
-document.getElementById('fit').onclick=fitAssembly;
-document.getElementById('reset').onclick=()=>{if(initial){camera.position.copy(initial.position);controls.target.copy(initial.target);controls.update();}};
-
-
-
-const renderModal=document.getElementById('renderModal');
-function openLifestyleRender(){renderModal.classList.add('open');renderModal.setAttribute('aria-hidden','false');}
-function closeLifestyleRender(){renderModal.classList.remove('open');renderModal.setAttribute('aria-hidden','true');}
-document.getElementById('showRender').addEventListener('click',openLifestyleRender);
-document.getElementById('closeRender').addEventListener('click',closeLifestyleRender);
-renderModal.addEventListener('click',event=>{if(event.target===renderModal)closeLifestyleRender();});
-document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLifestyleRender();});
-
-function resize(){const w=viewport.clientWidth,h=viewport.clientHeight;camera.aspect=w/Math.max(h,1);camera.updateProjectionMatrix();renderer.setSize(w,h,false);}
-new ResizeObserver(resize).observe(viewport);resize();
-renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera);});
-loadBase();
+document.getElementById('fit').onclick=fitAssembly;document.getElementById('reset').onclick=()=>{if(initial){camera.position.copy(initial.position);controls.target.copy(initial.target);controls.update();}};
+const renderModal=document.getElementById('renderModal');function openLifestyleRender(){renderModal.classList.add('open');renderModal.setAttribute('aria-hidden','false');}function closeLifestyleRender(){renderModal.classList.remove('open');renderModal.setAttribute('aria-hidden','true');}document.getElementById('showRender').addEventListener('click',openLifestyleRender);document.getElementById('closeRender').addEventListener('click',closeLifestyleRender);renderModal.addEventListener('click',e=>{if(e.target===renderModal)closeLifestyleRender();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLifestyleRender();});
+function resize(){const w=viewport.clientWidth,h=viewport.clientHeight;camera.aspect=w/Math.max(h,1);camera.updateProjectionMatrix();renderer.setSize(w,h,false);}new ResizeObserver(resize).observe(viewport);resize();renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera);});baseLoad();
 </script>
 </body>
 </html>

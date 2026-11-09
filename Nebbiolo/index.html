@@ -47,13 +47,13 @@ section{margin-top:21px;padding-top:17px;border-top:1px solid var(--line)}.secti
 <div class="app">
 <main id="viewport"><div class="hud"><strong id="hudTitle">Nebbiolo preview</strong><span id="hudStatus">Loading model…</span></div></main>
 <aside>
-<div class="panel-eyebrow">Build your pergola</div><h1 id="panelTitle">Nebbiolo</h1><p class="intro">Configure your frame finish and choose accessories for each side.</p>
+<div class="panel-eyebrow">Build your pergola</div><h1 id="panelTitle">Nebbiolo</h1><p class="intro">Configure your frame finish and choose accessories for each facade.</p>
 <div class="status" id="status">Loading main frame…</div>
 <section id="sizeSection" style="margin-top:14px;padding-top:0;border-top:0"><div class="section-head"><h2>Pergola size</h2><span class="step">01</span></div><p class="section-note">Choose the overall length and depth.</p><label class="field-label">Length</label><div class="size-options" id="lengthOptions"><button type="button" class="size-choice selected" data-size="4">4m</button><button type="button" class="size-choice" data-size="5">5m</button><button type="button" class="size-choice" data-size="6">6m</button></div><label class="field-label">Depth</label><div class="size-options" id="depthOptions"><button type="button" class="size-choice selected" data-size="2.5">2.5m</button><button type="button" class="size-choice" data-size="3">3m</button><button type="button" class="size-choice" data-size="3.5">3.5m</button></div><div class="size-current" id="sizeCurrent">Selected size: 4m × 2.5m</div><div class="size-warning" id="sizeWarning">The currently connected 3D files are for the 4m × 2.5m version. Other size models need to be exported and uploaded before the 3D geometry can change.</div></section>
 <section><div class="section-head"><h2>Frame colour</h2><span class="step">02</span></div><p class="section-note">Choose your aluminium finish.</p><div class="swatches"><button class="swatch selected" data-colour="#383E42" aria-label="RAL 7024 Graphite Grey" title="RAL 7024 Graphite Grey" style="--swatch:#383E42"></button><button class="swatch" data-colour="#0A0A0A" aria-label="RAL 9005 Jet Black" title="RAL 9005 Jet Black" style="--swatch:#0A0A0A"></button></div><div id="selectedColour" class="selected-colour">Selected: RAL 7024 — Graphite Grey</div></section>
 <section>
-<div class="section-head"><h2>Enclosure configuration</h2><span class="step">03</span></div>
-<p class="section-note">Configure the front first, then choose independent options for the left and right sides.</p>
+<div class="section-head"><h2>Facade configurator</h2><span class="step">03</span></div>
+<p class="section-note">Configure the front first, then choose independent options for the left and right facades.</p>
 
 <div class="config-area front-area">
   <div class="config-area-head"><span class="config-area-title">Front</span><span class="config-area-kicker">Front enclosure</span></div>
@@ -70,7 +70,7 @@ section{margin-top:21px;padding-top:17px;border-top:1px solid var(--line)}.secti
 </div>
 
 <div class="config-area">
-  <div class="config-area-head"><span class="config-area-title">Left side</span><span class="config-area-kicker">Side 01</span></div>
+  <div class="config-area-head"><span class="config-area-title">Left facade</span><span class="config-area-kicker">Side 01</span></div>
   <div class="config-fields">
     <div class="config-field">
       <label class="field-label" for="leftGableSelect">Gable finish</label>
@@ -87,11 +87,11 @@ section{margin-top:21px;padding-top:17px;border-top:1px solid var(--line)}.secti
       </select></div>
     </div>
   </div>
-  <div class="dependency-note" id="leftDependency">Louvred panels and side doors automatically include the left gable. Full-height walls and Grillo panels do not require one.</div>
+  <div class="dependency-note" id="leftDependency">Louvred panels and side doors automatically include the left facade gable. Full-height walls and Grillo panels do not require one.</div>
 </div>
 
 <div class="config-area">
-  <div class="config-area-head"><span class="config-area-title">Right side</span><span class="config-area-kicker">Side 02</span></div>
+  <div class="config-area-head"><span class="config-area-title">Right facade</span><span class="config-area-kicker">Side 02</span></div>
   <div class="config-fields">
     <div class="config-field">
       <label class="field-label" for="rightGableSelect">Gable finish</label>
@@ -108,7 +108,7 @@ section{margin-top:21px;padding-top:17px;border-top:1px solid var(--line)}.secti
       </select></div>
     </div>
   </div>
-  <div class="dependency-note" id="rightDependency">Louvred panels and side doors automatically include the right gable. Full-height walls and Grillo panels do not require one.</div>
+  <div class="dependency-note" id="rightDependency">Louvred panels and side doors automatically include the right facade gable. Full-height walls and Grillo panels do not require one.</div>
 </div>
 </section>
 

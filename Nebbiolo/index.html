@@ -28,7 +28,7 @@ section{margin-top:21px;padding-top:17px;border-top:1px solid var(--line)}.secti
 .config-area .select-wrap:after{right:10px}
 @media(max-width:560px){.config-area{padding:12px}.config-fields{gap:8px}.config-field .option-select{font-size:12px;padding-left:8px}}
 
-.render-modal{display:none;position:fixed;inset:0;z-index:50;background:rgba(13,18,24,.84);padding:24px;align-items:center;justify-content:center;overscroll-behavior:contain}.render-modal.open{display:flex}.render-dialog{width:min(1200px,96vw);max-height:92vh;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 18px 60px #0006}.render-toolbar{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--line)}.render-close{border:0;border-radius:7px;background:#eef1f4;color:#202833;padding:7px 11px;font-size:16px;cursor:pointer}#lifestyleRender{display:block;width:100%;max-height:calc(92vh - 48px);max-height:calc(92dvh - 48px);object-fit:contain;background:#f4f4f4}
+.render-modal{display:none;position:fixed;inset:0;z-index:50;background:rgba(13,18,24,.88);padding:24px;align-items:center;justify-content:center;overscroll-behavior:contain}.render-modal.open{display:flex}.render-dialog{width:min(1280px,96vw);max-height:94vh;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 18px 60px #0006}.render-toolbar{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--line)}.render-close{border:0;border-radius:7px;background:#eef1f4;color:#202833;padding:7px 11px;font-size:16px;cursor:pointer}.gallery-stage{display:flex;align-items:center;justify-content:center;gap:12px;padding:12px;background:#f2f4f6}.gallery-stage #lifestyleRender{display:block;width:calc(100% - 100px);height:min(68vh,760px);object-fit:contain;background:#e8ebee}.gallery-arrow{flex:0 0 40px;width:40px;height:48px;border:0;border-radius:8px;background:#243b4b;color:#fff;font-size:32px;line-height:1;cursor:pointer}.gallery-arrow:hover{background:#36566b}.gallery-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px}.gallery-thumbs{display:flex;gap:8px;overflow-x:auto}.gallery-thumb{width:76px;height:52px;flex:0 0 auto;padding:2px;border:2px solid transparent;border-radius:6px;background:#e9edf0;cursor:pointer}.gallery-thumb.active{border-color:#243b4b}.gallery-thumb img{width:100%;height:100%;object-fit:cover}.gallery-thumb:focus-visible,.gallery-arrow:focus-visible{outline:3px solid #d9ad55;outline-offset:2px}@media(max-width:600px){.render-modal{padding:8px}.render-dialog{width:100%;max-height:96vh}.gallery-stage{gap:5px;padding:6px}.gallery-stage #lifestyleRender{width:calc(100% - 74px);height:62vh}.gallery-arrow{flex-basis:32px;width:32px;height:42px}.gallery-thumb{width:58px;height:42px}.gallery-footer{padding:8px}}
 @media(max-width:1100px){.app{grid-template-columns:minmax(0,1fr) 420px}aside{padding:22px 19px}}
 @media(max-width:850px){.app{grid-template-columns:minmax(0,1fr);min-height:0}#viewport{grid-row:1;height:clamp(360px,55svh,570px);min-height:360px}aside{grid-row:2;max-height:none;overflow:visible;border-left:0;border-top:1px solid var(--line);padding:24px clamp(18px,4vw,36px) 34px}.topbar{padding-top:14px}.product-nav{padding-bottom:10px}}
 @media(max-width:560px){.brand-row{margin-bottom:12px}.brand-sub{font-size:9px}.top-meta{display:none}.product-tab{padding:9px 11px;font-size:11px}#viewport{height:48svh;min-height:300px;max-height:440px}.hud{left:12px;top:12px;padding:9px 11px}aside{padding:20px 16px 28px}h1{font-size:22px}.option-select{min-height:48px;font-size:13px}.action-row button{flex:1 1 calc(50% - 8px);min-height:44px}.render-modal{padding:9px}.render-dialog{width:100%;max-height:94svh;border-radius:9px}#lifestyleRender{max-height:calc(94svh - 54px)}}
@@ -114,7 +114,7 @@ section{margin-top:21px;padding-top:17px;border-top:1px solid var(--line)}.secti
 
 <section><div class="section-head"><h2>Preview controls</h2><span class="step">04</span></div><div class="action-row"><button class="action" id="fit">Fit model</button><button class="action secondary" id="reset">Reset camera</button><button class="action lifestyle-highlight" id="showRender">View lifestyle render</button></div><p class="hint">Drag to orbit, scroll or pinch to zoom, and right-drag to pan. Choose multiple configurations across the left, right and front positions.</p></section>
 </aside></div>
-<div id="renderModal" class="render-modal" aria-hidden="true"><div class="render-dialog" role="dialog" aria-modal="true" aria-label="Nebbiolo lifestyle render"><div class="render-toolbar"><strong>Nebbiolo — lifestyle render</strong><button type="button" class="render-close" id="closeRender" aria-label="Close render">✕</button></div><img id="lifestyleRender" src="https://a5spas.github.io/Garden-Pergola/Nebbiolo/Nebbiolo_Render.png" alt="Nebbiolo pergola lifestyle render"></div></div>
+<div id="renderModal" class="render-modal" aria-hidden="true"><div class="render-dialog gallery-dialog" role="dialog" aria-modal="true" aria-label="Nebbiolo lifestyle renders"><div class="render-toolbar"><strong>Nebbiolo — lifestyle renders</strong><button type="button" class="render-close" id="closeRender" aria-label="Close gallery">✕</button></div><div class="gallery-stage"><button type="button" class="gallery-arrow" id="renderPrev" aria-label="Previous image">‹</button><img id="lifestyleRender" src="" alt="Nebbiolo lifestyle render"><button type="button" class="gallery-arrow" id="renderNext" aria-label="Next image">›</button></div><div class="gallery-footer"><span id="renderCounter">1 / 5</span><div class="gallery-thumbs" id="renderThumbs"></div></div></div></div>
 
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}
@@ -141,8 +141,23 @@ function disposeObject(root){root.traverse(o=>{if(!o.isMesh)return;o.geometry?.d
 function registerMaterials(root){root.traverse(o=>{if(!o.isMesh||!o.material)return;const meshName=(o.name||'').toLowerCase();const srcs=Array.isArray(o.material)?o.material:[o.material];const copies=srcs.map(src=>{const mat=src.clone();let n=(src.name||'').toLowerCase();/* The right rear wall-profile cap was exported as blue 'fallback Material'. Treat this specific cap as the frame finish so the RAL swatch controls it like the matching left cap. */if(meshName.includes('wall_profile_cap')&&(n.includes('fallback')||n==='')){mat.name='ral_7024';n='ral_7024';}if(n.includes('ral_7024')||n.includes('ral_9005')||n.includes('aluminium')||n.includes('aluminum')||n.includes('frame'))frameMaterials.add(mat);return mat;});o.material=Array.isArray(o.material)?copies:copies[0];});}
 function loadTexture(url){if(textureCache.has(url))return textureCache.get(url);const p=new Promise((resolve,reject)=>new THREE.TextureLoader().load(url,t=>{t.colorSpace=THREE.SRGBColorSpace;t.flipY=false;t.wrapS=THREE.RepeatWrapping;t.wrapT=THREE.RepeatWrapping;t.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);resolve(t);},undefined,reject));textureCache.set(url,p);return p;}
 async function applyFrameColour(hex){selectedColour=hex;try{const tex=await loadTexture(FRAME_TEXTURES[hex]);frameMaterials.forEach(m=>{m.map=tex;m.color.setRGB(1,1,1);if('metalness'in m)m.metalness=0;if('roughness'in m&&m.roughness<.12)m.roughness=.35;m.needsUpdate=true;});const label=hex==='#0A0A0A'?'RAL 9005 — Jet Black':'RAL 7024 — Graphite Grey';document.getElementById('selectedColour').textContent='Selected: '+label;document.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('selected',b.dataset.colour===hex));}catch(e){console.error(e);status.textContent='Could not load frame texture. Check the Materials folder.';}}
-function makeRibMap(){const c=document.createElement('canvas');c.width=1024;c.height=256;const x=c.getContext('2d');x.fillStyle='rgb(128,128,128)';x.fillRect(0,0,1024,256);const pitch=1024/52;for(let i=0;i<52;i++){const u=i*pitch;x.fillStyle='rgb(178,178,178)';x.fillRect(u,0,pitch*.18,256);x.fillStyle='rgb(105,105,105)';x.fillRect(u+pitch*.22,0,pitch*.18,256);x.fillStyle='rgb(145,145,145)';x.fillRect(u+pitch*.40,0,pitch*.60,256);}const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.NoColorSpace;t.wrapS=THREE.RepeatWrapping;t.wrapT=THREE.RepeatWrapping;t.anisotropy=renderer.capabilities.getMaxAnisotropy();return t;}
-const polyRibMap=makeRibMap();
+// Use the actual polycarbonate reference map stored in the repository Materials folder.
+const POLYCARB_CLEAR_MAP='https://a5spas.github.io/Garden-Pergola/Materials/polycarb_clear.jpg';
+const polyRibMap=new THREE.TextureLoader().load(POLYCARB_CLEAR_MAP,()=>{
+  polyRibMap.colorSpace=THREE.NoColorSpace;
+  polyRibMap.wrapS=THREE.RepeatWrapping;
+  polyRibMap.wrapT=THREE.RepeatWrapping;
+  polyRibMap.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);
+  polyRibMap.needsUpdate=true;
+  Object.values(polyMaterials).forEach(m=>{m.bumpMap=polyRibMap;m.roughnessMap=polyRibMap;m.needsUpdate=true;});
+},undefined,error=>{
+  console.error('Could not load polycarb_clear.jpg:',error);
+  status.textContent='Could not load Materials/polycarb_clear.jpg. Check the GitHub filename and Pages deployment.';
+});
+polyRibMap.colorSpace=THREE.NoColorSpace;
+polyRibMap.wrapS=THREE.RepeatWrapping;
+polyRibMap.wrapT=THREE.RepeatWrapping;
+polyRibMap.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);
 const polyPresets={
  poly_clear:{color:0xffffff,transmission:1,roughness:.08,thickness:.08,attenuationColor:0xffffff,attenuationDistance:10,bump:.035},
  poly_opaque:{color:0xf4f4f0,transmission:.04,roughness:.88,thickness:.02,attenuationColor:0xf4f4f0,attenuationDistance:1,bump:.055},
@@ -229,7 +244,37 @@ document.getElementById('frontSelect').addEventListener('change',updateFront);
 document.querySelectorAll('.product-tab').forEach(tab=>tab.addEventListener('click',()=>{const product=tab.dataset.product;document.querySelectorAll('.product-tab').forEach(t=>t.classList.toggle('active',t===tab));if(product!=='Nebbiolo'){status.textContent=product.replaceAll('_',' ')+' model assets are not connected yet.';document.getElementById('panelTitle').textContent=product.replaceAll('_',' ');document.getElementById('hudTitle').textContent=product.replaceAll('_',' ')+' preview';hudStatus.textContent='Model assets not connected yet';}else{document.getElementById('panelTitle').textContent='Nebbiolo';document.getElementById('hudTitle').textContent='Nebbiolo preview';hudStatus.textContent=`${selectedLength}m × ${selectedDepth}m model`;status.textContent='Nebbiolo selected.';}}));
 document.querySelectorAll('.swatch').forEach(b=>b.addEventListener('click',()=>applyFrameColour(b.dataset.colour)));
 document.getElementById('fit').onclick=fitAssembly;document.getElementById('reset').onclick=()=>{if(initial){camera.position.copy(initial.position);controls.target.copy(initial.target);controls.update();}};
-const renderModal=document.getElementById('renderModal');function openLifestyleRender(){renderModal.classList.add('open');renderModal.setAttribute('aria-hidden','false');}function closeLifestyleRender(){renderModal.classList.remove('open');renderModal.setAttribute('aria-hidden','true');}document.getElementById('showRender').addEventListener('click',openLifestyleRender);document.getElementById('closeRender').addEventListener('click',closeLifestyleRender);renderModal.addEventListener('click',e=>{if(e.target===renderModal)closeLifestyleRender();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLifestyleRender();});
+const renderModal=document.getElementById('renderModal');
+const lifestyleImages=[
+ 'nebbiolo_render_001.png',
+ 'nebbiolo_render_002.png',
+ 'nebbiolo_render_003.png',
+ 'nebbiolo_render_004.png',
+ 'nebbiolo_render_005.png'
+].map(name=>'https://a5spas.github.io/Garden-Pergola/Nebbiolo/Renders/'+name);
+let lifestyleIndex=0;
+const lifestyleImage=document.getElementById('lifestyleRender');
+const renderCounter=document.getElementById('renderCounter');
+const renderThumbs=document.getElementById('renderThumbs');
+function showLifestyleImage(index){
+ lifestyleIndex=(index+lifestyleImages.length)%lifestyleImages.length;
+ lifestyleImage.src=lifestyleImages[lifestyleIndex];
+ lifestyleImage.alt='Nebbiolo lifestyle render '+(lifestyleIndex+1);
+ renderCounter.textContent=(lifestyleIndex+1)+' / '+lifestyleImages.length;
+ [...renderThumbs.children].forEach((button,i)=>button.classList.toggle('active',i===lifestyleIndex));
+}
+lifestyleImages.forEach((src,i)=>{
+ const button=document.createElement('button');button.type='button';button.className='gallery-thumb';button.setAttribute('aria-label','Show lifestyle render '+(i+1));
+ const thumb=document.createElement('img');thumb.src=src;thumb.alt='';button.appendChild(thumb);button.addEventListener('click',()=>showLifestyleImage(i));renderThumbs.appendChild(button);
+});
+function openLifestyleRender(){showLifestyleImage(lifestyleIndex);renderModal.classList.add('open');renderModal.setAttribute('aria-hidden','false');}
+function closeLifestyleRender(){renderModal.classList.remove('open');renderModal.setAttribute('aria-hidden','true');}
+document.getElementById('showRender').addEventListener('click',openLifestyleRender);
+document.getElementById('closeRender').addEventListener('click',closeLifestyleRender);
+document.getElementById('renderPrev').addEventListener('click',()=>showLifestyleImage(lifestyleIndex-1));
+document.getElementById('renderNext').addEventListener('click',()=>showLifestyleImage(lifestyleIndex+1));
+renderModal.addEventListener('click',e=>{if(e.target===renderModal)closeLifestyleRender();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLifestyleRender();if(renderModal.classList.contains('open')&&e.key==='ArrowLeft')showLifestyleImage(lifestyleIndex-1);if(renderModal.classList.contains('open')&&e.key==='ArrowRight')showLifestyleImage(lifestyleIndex+1);});
 
 function resize(){const w=viewport.clientWidth,h=viewport.clientHeight;camera.aspect=w/Math.max(h,1);camera.updateProjectionMatrix();renderer.setSize(w,h,false);}new ResizeObserver(resize).observe(viewport);resize();renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera);});updateSizeSelection();baseLoad();
 </script>

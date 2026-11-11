@@ -147,6 +147,7 @@ const polyRibMap=new THREE.TextureLoader().load(POLYCARB_CLEAR_MAP,()=>{
   polyRibMap.colorSpace=THREE.NoColorSpace;
   polyRibMap.wrapS=THREE.RepeatWrapping;
   polyRibMap.wrapT=THREE.RepeatWrapping;
+  polyRibMap.repeat.set(75,1);
   polyRibMap.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);
   polyRibMap.needsUpdate=true;
   Object.values(polyMaterials).forEach(m=>{m.bumpMap=polyRibMap;m.roughnessMap=polyRibMap;m.transmissionMap=polyRibMap;m.needsUpdate=true;});
@@ -157,6 +158,7 @@ const polyRibMap=new THREE.TextureLoader().load(POLYCARB_CLEAR_MAP,()=>{
 polyRibMap.colorSpace=THREE.NoColorSpace;
 polyRibMap.wrapS=THREE.RepeatWrapping;
 polyRibMap.wrapT=THREE.RepeatWrapping;
+polyRibMap.repeat.set(75,1);
 polyRibMap.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);
 const polyPresets={
  poly_clear:{color:0xffffff,transmission:1,roughness:.08,thickness:.08,attenuationColor:0xffffff,attenuationDistance:10,bump:.035},

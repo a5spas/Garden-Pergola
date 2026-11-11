@@ -137,8 +137,6 @@ const assembly=new THREE.Group();scene.add(assembly);let initial=null,selectedCo
 const frameMaterials=new Set(),textureCache=new Map(),loaded=new Map();
 const FRAME_TEXTURES={'#383E42':'https://a5spas.github.io/Garden-Pergola/Materials/ral_7024.jpg','#0A0A0A':'https://a5spas.github.io/Garden-Pergola/Materials/ral_9005.jpg'};
 
-const FRAME_TEXTURES={'#383E42':'https://a5spas.github.io/Garden-Pergola/Materials/ral_7024.jpg','#0A0A0A':'https://a5spas.github.io/Garden-Pergola/Materials/ral_9005.jpg'};
-const loaded=new Map(),frameMaterials=new Set(),textureCache=new Map();
 function disposeObject(root){root.traverse(o=>{if(!o.isMesh)return;o.geometry?.dispose();(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{if(!Object.values(polyMaterials).includes(m))m.dispose();});});}
 function registerMaterials(root){root.traverse(o=>{if(!o.isMesh||!o.material)return;const srcs=Array.isArray(o.material)?o.material:[o.material];const copies=srcs.map(src=>{const mat=src.clone(),n=(src.name||'').toLowerCase();if(n.includes('ral_7024')||n.includes('ral_9005')||n.includes('aluminium')||n.includes('aluminum')||n.includes('frame'))frameMaterials.add(mat);return mat;});o.material=Array.isArray(o.material)?copies:copies[0];});}
 function loadTexture(url){if(textureCache.has(url))return textureCache.get(url);const p=new Promise((resolve,reject)=>new THREE.TextureLoader().load(url,t=>{t.colorSpace=THREE.SRGBColorSpace;t.flipY=false;t.wrapS=THREE.RepeatWrapping;t.wrapT=THREE.RepeatWrapping;t.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);resolve(t);},undefined,reject));textureCache.set(url,p);return p;}

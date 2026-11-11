@@ -152,8 +152,46 @@ const polyPresets={
 };
 const polyMaterials={};
 for(const [key,p] of Object.entries(polyPresets)){const m=new THREE.MeshPhysicalMaterial({name:key,color:p.color,metalness:0,roughness:p.roughness,transmission:p.transmission,ior:1.5,thickness:p.thickness,attenuationColor:p.attenuationColor,attenuationDistance:p.attenuationDistance,side:THREE.DoubleSide,transparent:p.transmission>0,opacity:1,depthWrite:p.transmission===0,bumpMap:polyRibMap,bumpScale:p.bump,roughnessMap:polyRibMap});polyMaterials[key]=m;}
-function applyPolyFinish(root,finish){if(!finish||finish==='glass')return;const replacement=polyMaterials[finish];if(!replacement)return;root.traverse(o=>{if(!o.isMesh||!o.material)return;const arr=Array.isArray(o.material)?o.material:[o.material];const next=arr.map(m=>(m?.name||'').toLowerCase().includes('glass_clear')?replacement:m);o.material=Array.isArray(o.material)?next:next[0];});}
-function addModel(slot,root,polyFinish=null){removeModel(slot);registerMaterials(root);if(polyFinish)applyPolyFinish(root,polyFinish);assembly.add(root);loaded.set(slot,root);applyFrameColour(selectedColour);}
+function ensurePolyPanelUVs(mesh){
+  const g=mesh.geometry, pos=g.attributes.position;
+  if(!pos)return;
+  // Rebuild planar UVs for this panel, matching the standalone material test
+  // where the vertical rib map was confirmed to display correctly.
+  const box=new THREE.Box3().setFromBufferAttribute(pos);
+  const size=box.getSize(new THREE.Vector3());
+  const uv=new Float32Array(pos.count*2);
+  for(let i=0;i<pos.count;i++){
+    uv[i*2]=(pos.getX(i)-box.min.x)/Math.max(size.x,1e-6);
+    uv[i*2+1]=(pos.getY(i)-box.min.y)/Math.max(size.y,1e-6);
+  }
+  g.setAttribute('uv',new THREE.BufferAttribute(uv,2));
+}
+function applyPolyFinish(root,finish){
+  root.traverse(o=>{
+    if(!o.isMesh||!o.material)return;
+    const wasArray=Array.isArray(o.material), arr=wasArray?o.material:[o.material];
+    const next=arr.map(m=>{
+      const name=(m?.name||'').toLowerCase();
+      if(!name.includes('glass_clear'))return m;
+      if(finish==='glass'){
+        // Glass stays smooth: explicitly remove any polycarbonate surface maps.
+        const glass=m.clone(); glass.bumpMap=null; glass.roughnessMap=null;
+        glass.normalMap=null; glass.needsUpdate=true; return glass;
+      }
+      const replacement=polyMaterials[finish];
+      if(!replacement)return m;
+      ensurePolyPanelUVs(o);
+      return replacement;
+    });
+    o.material=wasArray?next:next[0];
+  });
+}
+function addModel(slot,root,polyFinish=null){
+  removeModel(slot);registerMaterials(root);
+  // For facade components, always explicitly choose glass or a polycarbonate preset.
+  if(polyFinish)applyPolyFinish(root,polyFinish);
+  assembly.add(root);loaded.set(slot,root);applyFrameColour(selectedColour);
+}
 function removeModel(slot){const obj=loaded.get(slot);if(!obj)return;assembly.remove(obj);disposeObject(obj);loaded.delete(slot);}
 function loadFile(path,success,failure){loader.load(BASE+path,g=>success(g.scene),undefined,e=>{console.error('GLB load failed:',path,e);failure?.(path);});}
 function sizeCode(){return `${selectedLength==='4'?'400':selectedLength==='5'?'500':'600'}_${selectedDepth==='2.5'?'250':selectedDepth==='3'?'300':'350'}`;}

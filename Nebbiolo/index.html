@@ -149,7 +149,7 @@ const polyRibMap=new THREE.TextureLoader().load(POLYCARB_CLEAR_MAP,()=>{
   polyRibMap.wrapT=THREE.RepeatWrapping;
   polyRibMap.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);
   polyRibMap.needsUpdate=true;
-  Object.values(polyMaterials).forEach(m=>{m.bumpMap=polyRibMap;m.roughnessMap=polyRibMap;m.needsUpdate=true;});
+  Object.values(polyMaterials).forEach(m=>{m.bumpMap=polyRibMap;m.roughnessMap=polyRibMap;m.transmissionMap=polyRibMap;m.needsUpdate=true;});
 },undefined,error=>{
   console.error('Could not load polycarb_clear.jpg:',error);
   status.textContent='Could not load Materials/polycarb_clear.jpg. Check the GitHub filename and Pages deployment.';
@@ -166,7 +166,7 @@ const polyPresets={
  poly_solar:{color:0xe2e5e5,transmission:.68,roughness:.48,thickness:.12,attenuationColor:0xd7dce0,attenuationDistance:.65,bump:.045}
 };
 const polyMaterials={};
-for(const [key,p] of Object.entries(polyPresets)){const m=new THREE.MeshPhysicalMaterial({name:key,color:p.color,metalness:0,roughness:p.roughness,transmission:p.transmission,ior:1.5,thickness:p.thickness,attenuationColor:p.attenuationColor,attenuationDistance:p.attenuationDistance,side:THREE.DoubleSide,transparent:p.transmission>0,opacity:1,depthWrite:p.transmission===0,bumpMap:polyRibMap,bumpScale:p.bump,roughnessMap:polyRibMap});polyMaterials[key]=m;}
+for(const [key,p] of Object.entries(polyPresets)){const m=new THREE.MeshPhysicalMaterial({name:key,color:p.color,metalness:0,roughness:p.roughness,transmission:p.transmission,ior:1.5,thickness:p.thickness,attenuationColor:p.attenuationColor,attenuationDistance:p.attenuationDistance,side:THREE.DoubleSide,transparent:p.transmission>0,opacity:1,depthWrite:p.transmission===0,bumpMap:polyRibMap,bumpScale:p.bump,roughnessMap:polyRibMap,transmissionMap:polyRibMap});polyMaterials[key]=m;}
 
 function ensurePolyPanelUVs(mesh){
  const g=mesh.geometry,pos=g.attributes.position;if(!pos)return;

@@ -13,7 +13,7 @@ aside{background:#fff;border-left:1px solid var(--line);padding:25px 24px 32px;o
 section{margin-top:21px;padding-top:17px;border-top:1px solid var(--line)}.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.step{font-size:10px;color:#91a0ad;font-weight:800;letter-spacing:.12em}.section-note{font-size:11px;color:var(--muted);margin:0 0 11px}.swatches{display:flex;gap:14px;flex-wrap:wrap;margin:13px 0 8px}button.swatch{width:38px;height:38px;flex:0 0 38px;padding:0;border-radius:50%;background:var(--swatch);border:1px solid #b9c2ca;box-shadow:inset 0 0 0 3px white;cursor:pointer}button.swatch.selected{outline:2px solid var(--accent);outline-offset:3px}.selected-colour{font-size:11px;color:var(--muted)}
 .size-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:8px 0 13px}.size-choice{min-height:42px;border:1px solid #d7dfe6;border-radius:8px;background:#fff;color:#40505e;font-size:12px;font-weight:700;cursor:pointer}.size-choice.selected{background:var(--accent);border-color:var(--accent);color:#fff}.size-current{font-size:11px;color:#526170;background:#f2f5f7;border:1px solid #e8edf1;border-radius:8px;padding:9px 10px;margin-top:9px}.size-warning{font-size:10px;color:#8a6a36;line-height:1.5;margin-top:7px}
 .field-label{display:block;font-size:11px;font-weight:700;color:#40505e;margin:12px 0 6px}.option-select{width:100%;min-height:44px;padding:0 38px 0 12px;border:1px solid #d7dfe6;border-radius:8px;background:#fff;color:#263541;font:500 12px system-ui,-apple-system,Segoe UI,sans-serif;outline:none;cursor:pointer}.option-select:focus{border-color:#587488;box-shadow:0 0 0 3px #34576a18}.select-wrap{position:relative}.select-wrap:after{content:'⌄';position:absolute;right:14px;top:10px;color:#71808e;pointer-events:none;font-size:17px}.dependency-note{font-size:10px;color:#7b8995;margin-top:7px;line-height:1.5}.choice-summary{font-size:10px;color:#657482;margin-top:8px;min-height:14px}.action-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}button.action{background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:8px;padding:10px 13px;min-height:40px;font-size:11px;font-weight:700;cursor:pointer;transition:.15s}button.action:hover{background:var(--accent2)}button.action.secondary{background:#fff;color:#40515f;border-color:#d9e0e6}button.action.secondary:hover{background:#f5f7f9}button.action.lifestyle-highlight{background:#d9ad55;color:#17212b;border-color:#c99a3e;box-shadow:0 3px 9px rgba(170,126,43,.22);font-weight:800}button.action.lifestyle-highlight:hover{background:#e5bd6b;border-color:#bd8c30;transform:translateY(-1px)}.hint{font-size:10px;color:#82909b;margin-top:17px;line-height:1.6}
-.light-control{background:#f5f7f9;border:1px solid #e3e8ed;border-radius:10px;padding:12px;margin-top:10px}.light-dial-row{display:flex;align-items:center;gap:12px}.light-dial{width:64px;height:64px;flex:0 0 64px;accent-color:#34576a;cursor:pointer;transform:rotate(-90deg)}.light-readout{font-size:18px;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums}.light-readout small{display:block;font-size:9px;color:#71808e;font-weight:700;letter-spacing:.1em;text-transform:uppercase}.light-control input[type=range]{width:100%;accent-color:#34576a}.light-control .hint{margin:7px 0 0}
+.light-control{background:#f5f7f9;border:1px solid #e3e8ed;border-radius:10px;padding:12px;margin-top:10px}.light-presets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.light-preset{min-height:44px;border:1px solid #d7dfe6;border-radius:8px;background:#fff;color:#40505e;font-size:11px;font-weight:700;cursor:pointer;padding:8px}.light-preset.active{background:var(--accent);border-color:var(--accent);color:#fff}.light-control .hint{margin:9px 0 0}
 .mobile-status{display:none}
 .config-area{background:#e9edf0;border:1px solid #d5dde3;border-radius:11px;padding:13px 14px 14px;margin-top:12px;box-shadow:0 1px 2px rgba(25,39,51,.035)}
 .config-area-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
@@ -113,7 +113,7 @@ section{margin-top:21px;padding-top:17px;border-top:1px solid var(--line)}.secti
 </div>
 </section>
 
-<section><div class="section-head"><h2>Studio lighting</h2><span class="step">05</span></div><p class="section-note">Rotate the three softbox lights around the pergola to find the best highlights.</p><div class="light-control"><div class="light-dial-row"><input class="light-dial" id="lightRotation" type="range" min="0" max="360" step="1" value="35" aria-label="Rotate studio lights 360 degrees"><div class="light-readout"><span id="lightAngle">035°</span><small>Light rotation</small></div></div><input id="lightRotationFine" type="range" min="0" max="360" step="1" value="35" aria-label="Fine light rotation control"><p class="hint">The key, fill and rim lights rotate together. Your camera and model view are unaffected.</p><div class="action-row"><button class="action secondary" type="button" id="resetLights">Reset lighting</button></div></div></section>
+<section><div class="section-head"><h2>Studio lighting</h2><span class="step">05</span></div><p class="section-note">Choose between two fixed studio lighting arrangements from different angles.</p><div class="light-control"><div class="light-presets"><button class="light-preset active" type="button" id="lightSetupA" aria-pressed="true">Studio setup 1 · Front three-quarter</button><button class="light-preset" type="button" id="lightSetupB" aria-pressed="false">Studio setup 2 · Opposite angle</button></div><p class="hint">Each setup uses the same soft key, fill and rim lights, positioned from a different direction. The camera and model view stay unchanged.</p></div></section>
 <section><div class="section-head"><h2>Preview controls</h2><span class="step">04</span></div><div class="action-row"><button class="action" id="fit">Fit model</button><button class="action secondary" id="reset">Reset camera</button><button class="action lifestyle-highlight" id="showRender">View lifestyle render</button></div><p class="hint">Drag to orbit, scroll or pinch to zoom, and right-drag to pan. Choose multiple configurations across the left, right and front positions.</p></section>
 </aside></div>
 <div id="renderModal" class="render-modal" aria-hidden="true"><div class="render-dialog gallery-dialog" role="dialog" aria-modal="true" aria-label="Nebbiolo lifestyle renders"><div class="render-toolbar"><strong>Nebbiolo — lifestyle renders</strong><button type="button" class="render-close" id="closeRender" aria-label="Close gallery">✕</button></div><div class="gallery-stage"><button type="button" class="gallery-arrow" id="renderPrev" aria-label="Previous image">‹</button><img id="lifestyleRender" src="" alt="Nebbiolo lifestyle render"><button type="button" class="gallery-arrow" id="renderNext" aria-label="Next image">›</button></div><div class="gallery-footer"><span id="renderCounter">1 / 5</span><div class="gallery-thumbs" id="renderThumbs"></div></div></div></div>
@@ -136,7 +136,7 @@ const key=new THREE.RectAreaLight(0xffffff,10,9,5);key.position.set(6,8,7);key.l
 const fill=new THREE.RectAreaLight(0xdce8f5,5,8,6);fill.position.set(-7,5,4);fill.lookAt(0,0,0);studioRig.add(fill);
 const rim=new THREE.RectAreaLight(0xffffff,12,10,3);rim.position.set(0,7,-8);rim.lookAt(0,0,0);studioRig.add(rim);
 const studioBounce=new THREE.DirectionalLight(0xffffff,0.65);studioBounce.position.set(0,10,2);scene.add(studioBounce);
-function setStudioLightRotation(degrees){const angle=THREE.MathUtils.degToRad(degrees);studioRig.rotation.y=angle;const label=String(Math.round(degrees)%360).padStart(3,'0')+'°';document.getElementById('lightAngle').textContent=label;document.getElementById('lightRotation').value=String(Math.round(degrees));document.getElementById('lightRotationFine').value=String(Math.round(degrees));}
+function setStudioLightSetup(setup){const degrees=setup==='B'?215:35;studioRig.rotation.y=THREE.MathUtils.degToRad(degrees);document.getElementById('lightSetupA').classList.toggle('active',setup==='A');document.getElementById('lightSetupB').classList.toggle('active',setup==='B');document.getElementById('lightSetupA').setAttribute('aria-pressed',String(setup==='A'));document.getElementById('lightSetupB').setAttribute('aria-pressed',String(setup==='B'));}
 
 const camera=new THREE.PerspectiveCamera(45,1,.01,100000),renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;viewport.appendChild(renderer.domElement);
@@ -258,6 +258,54 @@ function applyDoorGlassFinish(root){
  });
 }
 
+// Repair only the one 6m x 3.5m front sliding-door export whose three
+// material slots were exported as black "fallback Material" entries.
+// The slot order matches the working 4m/5m exports: aluminium, glass_clear, ral_7024.
+function restore600x350SlidingDoorMaterials(root){
+ const slotNames=['aluminium','glass_clear','ral_7024'];
+ root.traverse(o=>{
+  if(!o.isMesh||!Array.isArray(o.material))return;
+  const mats=o.material;
+  if(mats.length!==3||!mats.every(m=>(m?.name||'').toLowerCase().includes('fallback')))return;
+  const repaired=slotNames.map((name,i)=>{
+   if(i===0)return new THREE.MeshStandardMaterial({name,color:0xffffff,metalness:0.65,roughness:0.3,side:THREE.DoubleSide});
+   if(i===1)return new THREE.MeshPhysicalMaterial({name,color:0xffffff,metalness:0,roughness:0.05,transmission:1,ior:1.5,thickness:0.015,transparent:true,opacity:1,depthWrite:false,side:THREE.DoubleSide});
+   return new THREE.MeshStandardMaterial({name,color:0xffffff,metalness:0,roughness:0.2,side:THREE.DoubleSide});
+  });
+  // This anomalous export also omitted UVs. Generate simple planar UVs so the
+  // configurator's selected RAL frame texture can still display on slot 3.
+  const g=o.geometry,pos=g?.attributes?.position;
+  if(pos&&!g.attributes.uv){
+   const box=new THREE.Box3().setFromBufferAttribute(pos),size=box.getSize(new THREE.Vector3());
+   const uv=new Float32Array(pos.count*2);
+   for(let i=0;i<pos.count;i++){
+    uv[i*2]=(pos.getX(i)-box.min.x)/Math.max(size.x,1e-6);
+    uv[i*2+1]=(pos.getY(i)-box.min.y)/Math.max(size.y,1e-6);
+   }
+   g.setAttribute('uv',new THREE.BufferAttribute(uv,2));
+  }
+  o.material=repaired;
+ });
+}
+
+// The 6m x 3.5m steel-look front export has the polycarbonate rib image
+// incorrectly attached to glass_clear. Remove only that glass map; retain
+// the imported aluminium and RAL frame materials unchanged.
+function removePolycarbMapFromSteelDoorGlass(root){
+ root.traverse(o=>{
+  if(!o.isMesh||!o.material)return;
+  const mats=Array.isArray(o.material)?o.material:[o.material];
+  for(const m of mats){
+   if((m?.name||'').toLowerCase().includes('glass')){
+    m.map=null;m.bumpMap=null;m.normalMap=null;m.roughnessMap=null;m.metalnessMap=null;
+    m.color?.set(0xffffff);m.roughness=0.05;m.metalness=0;
+    if('transmission'in m)m.transmission=1;
+    m.needsUpdate=true;
+   }
+  }
+ });
+}
+
 
 function addModel(slot,root,polyFinish=null){removeModel(slot);registerMaterials(root);if(polyFinish)applyPolyFinish(root,polyFinish);assembly.add(root);loaded.set(slot,root);applyFrameColour(selectedColour);}
 function removeModel(slot){const obj=loaded.get(slot);if(!obj)return;assembly.remove(obj);disposeObject(obj);loaded.delete(slot);}
@@ -287,12 +335,15 @@ function updateGable(side,force){const selector=document.getElementById(side+'Ga
 async function updateSide(side){const state=sideState[side];state.version++;const version=state.version,value=document.getElementById(side+'Select').value;state.option=value;removeModel(side+'Option');updateGable(side);const path=sideAccessoryPath(side,value);if(!path){status.textContent=`${side==='left'?'Left':'Right'} side cleared.`;return;}loadFile(path,root=>{if(state.version!==version||state.option!==value){disposeObject(root);return;}const finish=value.split(':')[1]||'glass';if(value==='sliding'||value==='steel')applyDoorGlassFinish(root);addModel(side+'Option',root,value.startsWith('wall:')?finish:null);status.textContent=`${side==='left'?'Left':'Right'} side accessory loaded.`;},failed=>{if(state.version===version){state.option='';document.getElementById(side+'Select').value='';updateGable(side);status.textContent='Could not load '+failed+'. Check the exact filename.';}});}
 for(const side of ['left','right']){document.getElementById(side+'Select').addEventListener('change',()=>updateSide(side));document.getElementById(side+'GableSelect').addEventListener('change',()=>{if(requiresGable(sideState[side].option))updateGable(side);else if(document.getElementById(side+'GableSelect').value)updateGable(side,true);else removeModel(side+'Gable');});}
 const frontState={version:0,path:''};
-function updateFront(){const value=document.getElementById('frontSelect').value;frontState.version++;const version=frontState.version;frontState.path=value;removeModel('frontOption');if(!value)return;let path;if(value.startsWith('Sliding_Doors/'))path=`Sliding_Doors/nebbiolo_sliding_door_front_${sizeCode()}.glb`;else path=`Steel_Look_Doors/nebbiolo_steel_door_front_${sizeCode()}.glb`;loadFile(path,root=>{if(frontState.version!==version){disposeObject(root);return;}applyDoorGlassFinish(root);addModel('frontOption',root);status.textContent='Front accessory loaded.';},failed=>status.textContent='Could not load '+failed+'. Check the exact filename.');}
+function updateFront(){const value=document.getElementById('frontSelect').value;frontState.version++;const version=frontState.version;frontState.path=value;removeModel('frontOption');if(!value)return;let path;if(value.startsWith('Sliding_Doors/'))path=`Sliding_Doors/nebbiolo_sliding_door_front_${sizeCode()}.glb`;else path=`Steel_Look_Doors/nebbiolo_steel_door_front_${sizeCode()}.glb`;loadFile(path,root=>{if(frontState.version!==version){disposeObject(root);return;}
+  if(value.startsWith('Sliding_Doors/')&&sizeCode()==='600_350')restore600x350SlidingDoorMaterials(root);
+  if(value.startsWith('Steel_Look_Doors/')&&sizeCode()==='600_350')removePolycarbMapFromSteelDoorGlass(root);
+  applyDoorGlassFinish(root);addModel('frontOption',root);status.textContent='Front accessory loaded.';},failed=>status.textContent='Could not load '+failed+'. Check the exact filename.');}
 document.getElementById('frontSelect').addEventListener('change',updateFront);
 document.querySelectorAll('.product-tab').forEach(tab=>tab.addEventListener('click',()=>{const product=tab.dataset.product;document.querySelectorAll('.product-tab').forEach(t=>t.classList.toggle('active',t===tab));if(product!=='Nebbiolo'){status.textContent=product.replaceAll('_',' ')+' model assets are not connected yet.';document.getElementById('panelTitle').textContent=product.replaceAll('_',' ');document.getElementById('hudTitle').textContent=product.replaceAll('_',' ')+' preview';hudStatus.textContent='Model assets not connected yet';}else{document.getElementById('panelTitle').textContent='Nebbiolo';document.getElementById('hudTitle').textContent='Nebbiolo preview';hudStatus.textContent=`${selectedLength}m × ${selectedDepth}m model`;status.textContent='Nebbiolo selected.';}}));
 document.querySelectorAll('.swatch').forEach(b=>b.addEventListener('click',()=>applyFrameColour(b.dataset.colour)));
 document.getElementById('fit').onclick=fitAssembly;document.getElementById('reset').onclick=()=>{if(initial){camera.position.copy(initial.position);controls.target.copy(initial.target);controls.update();}};
-const lightDial=document.getElementById('lightRotation'),lightFine=document.getElementById('lightRotationFine');lightDial.addEventListener('input',()=>setStudioLightRotation(Number(lightDial.value)));lightFine.addEventListener('input',()=>setStudioLightRotation(Number(lightFine.value)));document.getElementById('resetLights').addEventListener('click',()=>setStudioLightRotation(35));setStudioLightRotation(35);
+document.getElementById('lightSetupA').addEventListener('click',()=>setStudioLightSetup('A'));document.getElementById('lightSetupB').addEventListener('click',()=>setStudioLightSetup('B'));setStudioLightSetup('A');
 const renderModal=document.getElementById('renderModal');
 const lifestyleImages=[
  'nebbiolo_render_001.png',

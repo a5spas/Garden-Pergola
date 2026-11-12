@@ -233,10 +233,18 @@ function applyPolyFinish(root,finish){
  });
 }
 function applyDoorGlassFinish(root){
+ // The sliding-door GLBs already contain a correctly authored glass_clear
+ // material with KHR_materials_transmission=1 and no polycarbonate texture.
+ // Preserve that imported MeshPhysicalMaterial instead of replacing it with
+ // a newly-created material (which was making the panes look milky/opaque).
  root.traverse(o=>{
   if(!o.isMesh||!o.material)return;
   const wasArray=Array.isArray(o.material),arr=wasArray?o.material:[o.material];
-  const next=arr.map(m=>isFrameMaterial(m)?m:makeSmoothDoorGlass(m));
+  const next=arr.map(m=>{
+   const n=(m?.name||'').toLowerCase();
+   if(n.includes('glass_clear')||n.includes('glass'))return m;
+   return m;
+  });
   o.material=wasArray?next:next[0];
  });
 }

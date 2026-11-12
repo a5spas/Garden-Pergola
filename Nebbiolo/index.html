@@ -162,7 +162,7 @@ polyRibMap.repeat.set(75,1);
 polyRibMap.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);
 const polyPresets={
  poly_clear:{color:0xffffff,transmission:1,roughness:.08,thickness:.08,attenuationColor:0xffffff,attenuationDistance:10,bump:.035},
- poly_opaque:{color:0xf4f4f0,transmission:.04,roughness:.88,thickness:.02,attenuationColor:0xf4f4f0,attenuationDistance:1,bump:.055},
+ poly_opaque:{color:0xf4f4f0,transmission:.04,roughness:.88,thickness:.02,attenuationColor:0xf4f4f0,attenuationDistance:1,bump:.10},
  poly_grey:{color:0x858991,transmission:.52,roughness:.32,thickness:.08,attenuationColor:0x737984,attenuationDistance:2.2,bump:.045},
  poly_cream:{color:0xe7e1d3,transmission:.48,roughness:.38,thickness:.08,attenuationColor:0xe7e1d3,attenuationDistance:2.2,bump:.045},
  poly_solar:{color:0xe2e5e5,transmission:.68,roughness:.48,thickness:.12,attenuationColor:0xd7dce0,attenuationDistance:.65,bump:.045}
@@ -194,6 +194,22 @@ function resolvePolyFinish(finish){
  if(finish.startsWith('poly_'))return finish;
  return 'poly_'+finish;
 }
+
+function isFrameMaterial(mat){
+ const n=(mat?.name||'').toLowerCase();
+ return n.includes('ral_7024')||n.includes('ral_9005')||n.includes('aluminium')||
+        n.includes('aluminum')||n.includes('frame')||n.includes('metal')||
+        n.includes('wall_profile')||n.includes('post')||n.includes('beam');
+}
+function makeSmoothDoorGlass(source){
+ const glass=new THREE.MeshPhysicalMaterial({
+  name:'door_glass_smooth',color:0xffffff,metalness:0,roughness:0.035,
+  transmission:1,ior:1.5,thickness:0.015,transparent:true,opacity:1,
+  depthWrite:false,side:THREE.DoubleSide
+ });
+ // Do not inherit any colour, bump, normal or roughness pattern from the GLB.
+ return glass;
+}
 function applyPolyFinish(root,finish){
  const key=resolvePolyFinish(finish);
  root.traverse(o=>{
@@ -201,26 +217,30 @@ function applyPolyFinish(root,finish){
   const wasArray=Array.isArray(o.material),arr=wasArray?o.material:[o.material];
   const next=arr.map(m=>{
    const n=(m?.name||'').toLowerCase();
-   if(!n.includes('glass_clear')&&!n.includes('polycarb'))return m;
+   if(isFrameMaterial(m))return m;
    if(key==='glass'){
-    // The source GLB's glass_clear material carries the ribbed base-colour map.
-    // Remove all polycarbonate maps for a genuinely smooth glass finish.
-    const glass=m.clone();
-    glass.name='glass_clear_smooth';
-    glass.map=null;glass.bumpMap=null;glass.roughnessMap=null;glass.normalMap=null;
-    glass.color.set(0xffffff);glass.roughness=0.035;glass.metalness=0;
-    glass.transmission=1;glass.ior=1.5;glass.thickness=0.02;
-    glass.transparent=true;glass.opacity=1;glass.depthWrite=false;glass.needsUpdate=true;
-    return glass;
+    // Glass on walls/gables: smooth and unpatterned.
+    return makeSmoothDoorGlass(m);
    }
    const replacement=polyMaterials[key];
    if(!replacement)return m;
+   // Wall/gable GLBs can use inconsistent source material names.
+   // Replace all non-frame panel materials so opaque panels receive the same rib map too.
    ensurePolyPanelUVs(o);
    return replacement;
   });
   o.material=wasArray?next:next[0];
  });
 }
+function applyDoorGlassFinish(root){
+ root.traverse(o=>{
+  if(!o.isMesh||!o.material)return;
+  const wasArray=Array.isArray(o.material),arr=wasArray?o.material:[o.material];
+  const next=arr.map(m=>isFrameMaterial(m)?m:makeSmoothDoorGlass(m));
+  o.material=wasArray?next:next[0];
+ });
+}
+
 
 function addModel(slot,root,polyFinish=null){removeModel(slot);registerMaterials(root);if(polyFinish)applyPolyFinish(root,polyFinish);assembly.add(root);loaded.set(slot,root);applyFrameColour(selectedColour);}
 function removeModel(slot){const obj=loaded.get(slot);if(!obj)return;assembly.remove(obj);disposeObject(obj);loaded.delete(slot);}
@@ -247,10 +267,10 @@ function gablePath(side,finish){return `Side_Gable/nebbiolo_side_gable_${side}_$
 function sideAccessoryPath(side,value){if(!value)return null;const [kind,finish]=value.split(':');if(kind==='wall')return `Sidewall/nebbiolo_sidewall_${side}_${sizeCode()}.glb`;if(kind==='louvre')return `Louvre_Panel/nebbiolo_louvre_panel_${side}_${sizeCode()}.glb`;if(kind==='grillo')return `Grillo_Panel/nebbiolo_grillo_panel_${side}_${sizeCode()}.glb`;if(kind==='sliding')return `Sliding_Doors/nebbiolo_sliding_door_${side}_${sizeCode()}.glb`;if(kind==='steel')return `Steel_Look_Doors/nebbiolo_steel_door_${side}_${sizeCode()}.glb`;return null;}
 function requiresGable(value){return !!value&&['louvre','sliding','steel'].includes(value.split(':')[0]);}
 function updateGable(side,force){const selector=document.getElementById(side+'GableSelect');if(requiresGable(sideState[side].option)&&!selector.value)selector.value='glass';const finish=selector.value||'glass',needed=force??requiresGable(sideState[side].option);const slot=side+'Gable';if(!needed){removeModel(slot);return;}const path=gablePath(side,finish),token=++sideState[side].gableVersion;loadFile(path,root=>{if(token!==sideState[side].gableVersion){disposeObject(root);return;}addModel(slot,root,finish);},failed=>status.textContent='Could not load gable: '+failed);}
-async function updateSide(side){const state=sideState[side];state.version++;const version=state.version,value=document.getElementById(side+'Select').value;state.option=value;removeModel(side+'Option');updateGable(side);const path=sideAccessoryPath(side,value);if(!path){status.textContent=`${side==='left'?'Left':'Right'} side cleared.`;return;}loadFile(path,root=>{if(state.version!==version||state.option!==value){disposeObject(root);return;}const finish=value.split(':')[1]||'glass';addModel(side+'Option',root,value.startsWith('wall:')?finish:null);status.textContent=`${side==='left'?'Left':'Right'} side accessory loaded.`;},failed=>{if(state.version===version){state.option='';document.getElementById(side+'Select').value='';updateGable(side);status.textContent='Could not load '+failed+'. Check the exact filename.';}});}
+async function updateSide(side){const state=sideState[side];state.version++;const version=state.version,value=document.getElementById(side+'Select').value;state.option=value;removeModel(side+'Option');updateGable(side);const path=sideAccessoryPath(side,value);if(!path){status.textContent=`${side==='left'?'Left':'Right'} side cleared.`;return;}loadFile(path,root=>{if(state.version!==version||state.option!==value){disposeObject(root);return;}const finish=value.split(':')[1]||'glass';if(value==='sliding'||value==='steel')applyDoorGlassFinish(root);addModel(side+'Option',root,value.startsWith('wall:')?finish:null);status.textContent=`${side==='left'?'Left':'Right'} side accessory loaded.`;},failed=>{if(state.version===version){state.option='';document.getElementById(side+'Select').value='';updateGable(side);status.textContent='Could not load '+failed+'. Check the exact filename.';}});}
 for(const side of ['left','right']){document.getElementById(side+'Select').addEventListener('change',()=>updateSide(side));document.getElementById(side+'GableSelect').addEventListener('change',()=>{if(requiresGable(sideState[side].option))updateGable(side);else if(document.getElementById(side+'GableSelect').value)updateGable(side,true);else removeModel(side+'Gable');});}
 const frontState={version:0,path:''};
-function updateFront(){const value=document.getElementById('frontSelect').value;frontState.version++;const version=frontState.version;frontState.path=value;removeModel('frontOption');if(!value)return;let path;if(value.startsWith('Sliding_Doors/'))path=`Sliding_Doors/nebbiolo_sliding_door_front_${sizeCode()}.glb`;else path=`Steel_Look_Doors/nebbiolo_steel_door_front_${sizeCode()}.glb`;loadFile(path,root=>{if(frontState.version!==version){disposeObject(root);return;}addModel('frontOption',root);status.textContent='Front accessory loaded.';},failed=>status.textContent='Could not load '+failed+'. Check the exact filename.');}
+function updateFront(){const value=document.getElementById('frontSelect').value;frontState.version++;const version=frontState.version;frontState.path=value;removeModel('frontOption');if(!value)return;let path;if(value.startsWith('Sliding_Doors/'))path=`Sliding_Doors/nebbiolo_sliding_door_front_${sizeCode()}.glb`;else path=`Steel_Look_Doors/nebbiolo_steel_door_front_${sizeCode()}.glb`;loadFile(path,root=>{if(frontState.version!==version){disposeObject(root);return;}applyDoorGlassFinish(root);addModel('frontOption',root);status.textContent='Front accessory loaded.';},failed=>status.textContent='Could not load '+failed+'. Check the exact filename.');}
 document.getElementById('frontSelect').addEventListener('change',updateFront);
 document.querySelectorAll('.product-tab').forEach(tab=>tab.addEventListener('click',()=>{const product=tab.dataset.product;document.querySelectorAll('.product-tab').forEach(t=>t.classList.toggle('active',t===tab));if(product!=='Nebbiolo'){status.textContent=product.replaceAll('_',' ')+' model assets are not connected yet.';document.getElementById('panelTitle').textContent=product.replaceAll('_',' ');document.getElementById('hudTitle').textContent=product.replaceAll('_',' ')+' preview';hudStatus.textContent='Model assets not connected yet';}else{document.getElementById('panelTitle').textContent='Nebbiolo';document.getElementById('hudTitle').textContent='Nebbiolo preview';hudStatus.textContent=`${selectedLength}m × ${selectedDepth}m model`;status.textContent='Nebbiolo selected.';}}));
 document.querySelectorAll('.swatch').forEach(b=>b.addEventListener('click',()=>applyFrameColour(b.dataset.colour)));

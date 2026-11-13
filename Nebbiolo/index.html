@@ -36,6 +36,25 @@ section{margin-top:21px;padding-top:17px;border-top:1px solid var(--line)}.secti
 @media(orientation:landscape) and (max-height:520px) and (max-width:850px){.app{grid-template-columns:minmax(0,1fr) 330px}.topbar{padding-top:8px}.brand-row{margin-bottom:7px}.product-nav{padding-bottom:6px}.product-tab{padding:6px 9px}#viewport{grid-column:1;grid-row:1;height:calc(100dvh - 90px);min-height:0}aside{grid-column:2;grid-row:1;max-height:calc(100dvh - 90px);overflow:auto;border-top:0;border-left:1px solid var(--line);padding:14px}}
 
 
+
+.quote-cta{background:#d9ad55!important;color:#17212b!important;border-color:#c99a3e!important;font-weight:800!important}
+.quote-cta:hover{background:#e5bd6b!important}
+.quote-modal{display:none;position:fixed;inset:0;z-index:70;background:rgba(13,18,24,.68);padding:18px;align-items:center;justify-content:center;overscroll-behavior:contain}
+.quote-modal.open{display:flex}
+.quote-dialog{width:min(480px,100%);background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 22px 70px rgba(0,0,0,.28)}
+.quote-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;border-bottom:1px solid var(--line)}
+.quote-head strong{font-size:16px;letter-spacing:-.02em}
+.quote-body{padding:18px 20px 20px}
+.quote-intro{font-size:12px;color:var(--muted);margin:0 0 15px}
+.quote-field{display:block;margin:0 0 13px}
+.quote-field span{display:block;font-size:11px;font-weight:700;color:#40505e;margin-bottom:6px}
+.quote-field input{display:block;width:100%;height:44px;border:1px solid #d7dfe6;border-radius:8px;padding:0 12px;background:#fff;color:#263541;font:13px inherit;outline:none}
+.quote-field input:focus{border-color:#587488;box-shadow:0 0 0 3px #34576a18}
+.quote-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.quote-status{display:none;margin-top:12px;padding:10px 12px;border-radius:8px;background:#f5f7f9;border:1px solid #e3e8ed;color:#526170;font-size:11px;line-height:1.5}
+.quote-status.show{display:block}
+@media(max-width:560px){.quote-modal{padding:10px}.quote-head{padding:16px}.quote-body{padding:16px}}
+
 </style>
 </head>
 <body>
@@ -114,9 +133,26 @@ section{margin-top:21px;padding-top:17px;border-top:1px solid var(--line)}.secti
 </section>
 
 <section><div class="section-head"><h2>Studio lighting</h2><span class="step">05</span></div><p class="section-note">Choose between two fixed studio lighting arrangements from different angles.</p><div class="light-control"><div class="light-presets"><button class="light-preset active" type="button" id="lightSetupA" aria-pressed="true">Studio setup 1 · Front three-quarter</button><button class="light-preset" type="button" id="lightSetupB" aria-pressed="false">Studio setup 2 · Opposite angle</button></div><p class="hint">Each setup uses the same soft key, fill and rim lights, positioned from a different direction. The camera and model view stay unchanged.</p></div></section>
-<section><div class="section-head"><h2>Preview controls</h2><span class="step">04</span></div><div class="action-row"><button class="action" id="fit">Fit model</button><button class="action secondary" id="reset">Reset camera</button><button class="action lifestyle-highlight" id="showRender">View lifestyle render</button></div><p class="hint">Drag to orbit, scroll or pinch to zoom, and right-drag to pan. Choose multiple configurations across the left, right and front positions.</p></section>
+<section><div class="section-head"><h2>Preview controls</h2><span class="step">04</span></div><div class="action-row"><button class="action" id="fit">Fit model</button><button class="action secondary" id="reset">Reset camera</button><button class="action lifestyle-highlight" id="showRender">View lifestyle render</button><button class="action quote-cta" id="openQuote">Request a quote</button></div><p class="hint">Drag to orbit, scroll or pinch to zoom, and right-drag to pan. Choose multiple configurations across the left, right and front positions.</p></section>
 </aside></div>
 <div id="renderModal" class="render-modal" aria-hidden="true"><div class="render-dialog gallery-dialog" role="dialog" aria-modal="true" aria-label="Nebbiolo lifestyle renders"><div class="render-toolbar"><strong>Nebbiolo — lifestyle renders</strong><button type="button" class="render-close" id="closeRender" aria-label="Close gallery">✕</button></div><div class="gallery-stage"><button type="button" class="gallery-arrow" id="renderPrev" aria-label="Previous image">‹</button><img id="lifestyleRender" src="" alt="Nebbiolo lifestyle render"><button type="button" class="gallery-arrow" id="renderNext" aria-label="Next image">›</button></div><div class="gallery-footer"><span id="renderCounter">1 / 5</span><div class="gallery-thumbs" id="renderThumbs"></div></div></div></div>
+
+
+<div id="quoteModal" class="quote-modal" aria-hidden="true">
+  <div class="quote-dialog" role="dialog" aria-modal="true" aria-labelledby="quoteTitle">
+    <div class="quote-head"><strong id="quoteTitle">Request a quote</strong><button type="button" class="render-close" id="closeQuote" aria-label="Close quote form">✕</button></div>
+    <div class="quote-body">
+      <p class="quote-intro">Enter your contact details and the A5 Spas team can get back to you about your pergola configuration.</p>
+      <form id="quoteForm">
+        <label class="quote-field"><span>Full name</span><input name="name" type="text" autocomplete="name" placeholder="Your name" required></label>
+        <label class="quote-field"><span>Telephone number</span><input name="telephone" type="tel" autocomplete="tel" placeholder="Your contact number" required></label>
+        <label class="quote-field"><span>Email address</span><input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+        <div class="quote-actions"><button type="button" class="action secondary" id="cancelQuote">Cancel</button><button type="submit" class="action quote-cta">Submit request</button></div>
+        <div class="quote-status" id="quoteStatus" role="status" aria-live="polite">The form is ready, but email delivery has not been connected yet. Your details have not been sent. Add the recipient email address and connect a form service to enable submissions.</div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}
@@ -299,6 +335,19 @@ document.querySelectorAll('.product-tab').forEach(tab=>tab.addEventListener('cli
 document.querySelectorAll('.swatch').forEach(b=>b.addEventListener('click',()=>applyFrameColour(b.dataset.colour)));
 document.getElementById('fit').onclick=fitAssembly;document.getElementById('reset').onclick=()=>{if(initial){camera.position.copy(initial.position);controls.target.copy(initial.target);controls.update();}};
 document.getElementById('lightSetupA').addEventListener('click',()=>setStudioLightSetup('A'));document.getElementById('lightSetupB').addEventListener('click',()=>setStudioLightSetup('B'));setStudioLightSetup('A');
+
+const quoteModal=document.getElementById('quoteModal');
+const quoteForm=document.getElementById('quoteForm');
+const quoteStatus=document.getElementById('quoteStatus');
+function openQuote(){quoteModal.classList.add('open');quoteModal.setAttribute('aria-hidden','false');quoteStatus.classList.remove('show');quoteForm.querySelector('input').focus();}
+function closeQuote(){quoteModal.classList.remove('open');quoteModal.setAttribute('aria-hidden','true');}
+document.getElementById('openQuote').addEventListener('click',openQuote);
+document.getElementById('closeQuote').addEventListener('click',closeQuote);
+document.getElementById('cancelQuote').addEventListener('click',closeQuote);
+quoteModal.addEventListener('click',e=>{if(e.target===quoteModal)closeQuote();});
+quoteForm.addEventListener('submit',e=>{e.preventDefault();if(!quoteForm.reportValidity())return;quoteStatus.classList.add('show');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&quoteModal.classList.contains('open'))closeQuote();});
+
 const renderModal=document.getElementById('renderModal');
 const lifestyleImages=[
  'nebbiolo_render_001.png',

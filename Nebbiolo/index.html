@@ -243,8 +243,29 @@ function applyPolyFinish(root,finish){
 }
 
 
-// Door GLBs are loaded with their embedded aluminium, clear-glass and RAL materials intact.
-function addModel(slot,root,polyFinish=null){removeModel(slot);registerMaterials(root);if(polyFinish)applyPolyFinish(root,polyFinish);assembly.add(root);loaded.set(slot,root);applyFrameColour(selectedColour);}
+// Door GLBs retain their original material assignments. Only normalize the material
+// explicitly named glass_clear: remove any stray texture maps and ensure it renders as clear glass.
+function normalizeDoorGlass(root){
+ root.traverse(o=>{
+  if(!o.isMesh||!o.material)return;
+  const mats=Array.isArray(o.material)?o.material:[o.material];
+  for(const m of mats){
+   if((m?.name||'').toLowerCase()!=='glass_clear')continue;
+   // Keep the imported material object and assignment; strip only accidental surface maps.
+   m.map=null;m.alphaMap=null;m.bumpMap=null;m.normalMap=null;m.roughnessMap=null;
+   m.metalnessMap=null;m.aoMap=null;m.displacementMap=null;m.emissiveMap=null;
+   if(m.color)m.color.set(0xffffff);
+   if('metalness' in m)m.metalness=0;
+   if('roughness' in m)m.roughness=0.05;
+   if('transmission' in m)m.transmission=1;
+   if('ior' in m)m.ior=1.5;
+   if('thickness' in m)m.thickness=0.015;
+   m.transparent=true;m.opacity=1;m.depthWrite=false;m.side=THREE.DoubleSide;
+   m.needsUpdate=true;
+  }
+ });
+}
+function addModel(slot,root,polyFinish=null,isDoor=false){removeModel(slot);registerMaterials(root);if(isDoor)normalizeDoorGlass(root);if(polyFinish)applyPolyFinish(root,polyFinish);assembly.add(root);loaded.set(slot,root);applyFrameColour(selectedColour);} 
 function removeModel(slot){const obj=loaded.get(slot);if(!obj)return;assembly.remove(obj);disposeObject(obj);loaded.delete(slot);}
 function loadFile(path,success,failure){loader.load(BASE+path,g=>success(g.scene),undefined,e=>{console.error('GLB load failed:',path,e);failure?.(path);});}
 function sizeCode(){return `${selectedLength==='4'?'400':selectedLength==='5'?'500':'600'}_${selectedDepth==='2.5'?'250':selectedDepth==='3'?'300':'350'}`;}
@@ -269,10 +290,10 @@ function gablePath(side,finish){return `Side_Gable/nebbiolo_side_gable_${side}_$
 function sideAccessoryPath(side,value){if(!value)return null;const [kind,finish]=value.split(':');if(kind==='wall')return `Sidewall/nebbiolo_sidewall_${side}_${sizeCode()}.glb`;if(kind==='louvre')return `Louvre_Panel/nebbiolo_louvre_panel_${side}_${sizeCode()}.glb`;if(kind==='grillo')return `Grillo_Panel/nebbiolo_grillo_panel_${side}_${sizeCode()}.glb`;if(kind==='sliding')return `Sliding_Doors/nebbiolo_sliding_door_${side}_${sizeCode()}.glb`;if(kind==='steel')return `Steel_Look_Doors/nebbiolo_steel_door_${side}_${sizeCode()}.glb`;return null;}
 function requiresGable(value){return !!value&&['louvre','sliding','steel'].includes(value.split(':')[0]);}
 function updateGable(side,force){const selector=document.getElementById(side+'GableSelect');if(requiresGable(sideState[side].option)&&!selector.value)selector.value='glass';const finish=selector.value||'glass',needed=force??requiresGable(sideState[side].option);const slot=side+'Gable';if(!needed){removeModel(slot);return;}const path=gablePath(side,finish),token=++sideState[side].gableVersion;loadFile(path,root=>{if(token!==sideState[side].gableVersion){disposeObject(root);return;}addModel(slot,root,finish);},failed=>status.textContent='Could not load gable: '+failed);}
-async function updateSide(side){const state=sideState[side];state.version++;const version=state.version,value=document.getElementById(side+'Select').value;state.option=value;removeModel(side+'Option');updateGable(side);const path=sideAccessoryPath(side,value);if(!path){status.textContent=`${side==='left'?'Left':'Right'} side cleared.`;return;}loadFile(path,root=>{if(state.version!==version||state.option!==value){disposeObject(root);return;}const finish=value.split(':')[1]||'glass';addModel(side+'Option',root,value.startsWith('wall:')?finish:null);status.textContent=`${side==='left'?'Left':'Right'} side accessory loaded.`;},failed=>{if(state.version===version){state.option='';document.getElementById(side+'Select').value='';updateGable(side);status.textContent='Could not load '+failed+'. Check the exact filename.';}});}
+async function updateSide(side){const state=sideState[side];state.version++;const version=state.version,value=document.getElementById(side+'Select').value;state.option=value;removeModel(side+'Option');updateGable(side);const path=sideAccessoryPath(side,value);if(!path){status.textContent=`${side==='left'?'Left':'Right'} side cleared.`;return;}loadFile(path,root=>{if(state.version!==version||state.option!==value){disposeObject(root);return;}const finish=value.split(':')[1]||'glass';const kind=value.split(':')[0];addModel(side+'Option',root,kind==='wall'?finish:null,kind==='sliding'||kind==='steel');status.textContent=`${side==='left'?'Left':'Right'} side accessory loaded.`;},failed=>{if(state.version===version){state.option='';document.getElementById(side+'Select').value='';updateGable(side);status.textContent='Could not load '+failed+'. Check the exact filename.';}});}
 for(const side of ['left','right']){document.getElementById(side+'Select').addEventListener('change',()=>updateSide(side));document.getElementById(side+'GableSelect').addEventListener('change',()=>{if(requiresGable(sideState[side].option))updateGable(side);else if(document.getElementById(side+'GableSelect').value)updateGable(side,true);else removeModel(side+'Gable');});}
 const frontState={version:0,path:''};
-function updateFront(){const value=document.getElementById('frontSelect').value;frontState.version++;const version=frontState.version;frontState.path=value;removeModel('frontOption');if(!value)return;let path;if(value.startsWith('Sliding_Doors/'))path=`Sliding_Doors/nebbiolo_sliding_door_front_${sizeCode()}.glb`;else path=`Steel_Look_Doors/nebbiolo_steel_door_front_${sizeCode()}.glb`;loadFile(path,root=>{if(frontState.version!==version){disposeObject(root);return;}addModel('frontOption',root);status.textContent='Front accessory loaded.';},failed=>status.textContent='Could not load '+failed+'. Check the exact filename.');}
+function updateFront(){const value=document.getElementById('frontSelect').value;frontState.version++;const version=frontState.version;frontState.path=value;removeModel('frontOption');if(!value)return;let path;if(value.startsWith('Sliding_Doors/'))path=`Sliding_Doors/nebbiolo_sliding_door_front_${sizeCode()}.glb`;else path=`Steel_Look_Doors/nebbiolo_steel_door_front_${sizeCode()}.glb`;loadFile(path,root=>{if(frontState.version!==version){disposeObject(root);return;}addModel('frontOption',root,null,true);status.textContent='Front accessory loaded.';},failed=>status.textContent='Could not load '+failed+'. Check the exact filename.');}
 document.getElementById('frontSelect').addEventListener('change',updateFront);
 document.querySelectorAll('.product-tab').forEach(tab=>tab.addEventListener('click',()=>{const product=tab.dataset.product;document.querySelectorAll('.product-tab').forEach(t=>t.classList.toggle('active',t===tab));if(product!=='Nebbiolo'){status.textContent=product.replaceAll('_',' ')+' model assets are not connected yet.';document.getElementById('panelTitle').textContent=product.replaceAll('_',' ');document.getElementById('hudTitle').textContent=product.replaceAll('_',' ')+' preview';hudStatus.textContent='Model assets not connected yet';}else{document.getElementById('panelTitle').textContent='Nebbiolo';document.getElementById('hudTitle').textContent='Nebbiolo preview';hudStatus.textContent=`${selectedLength}m × ${selectedDepth}m model`;status.textContent='Nebbiolo selected.';}}));
 document.querySelectorAll('.swatch').forEach(b=>b.addEventListener('click',()=>applyFrameColour(b.dataset.colour)));

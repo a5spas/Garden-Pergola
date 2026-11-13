@@ -146,8 +146,8 @@ const assembly=new THREE.Group();scene.add(assembly);let initial=null,selectedCo
 const frameMaterials=new Set(),textureCache=new Map(),loaded=new Map();
 const FRAME_TEXTURES={'#383E42':'https://a5spas.github.io/Garden-Pergola/Materials/ral_7024.jpg','#0A0A0A':'https://a5spas.github.io/Garden-Pergola/Materials/ral_9005.jpg'};
 
-function disposeObject(root){root.traverse(o=>{if(!o.isMesh)return;o.geometry?.dispose();(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{if(!Object.values(polyMaterials).includes(m))m.dispose();});});}
-function registerMaterials(root){root.traverse(o=>{if(!o.isMesh||!o.material)return;const meshName=(o.name||'').toLowerCase();const srcs=Array.isArray(o.material)?o.material:[o.material];const copies=srcs.map(src=>{const mat=src.clone();let n=(src.name||'').toLowerCase();/* The right rear wall-profile cap was exported as blue 'fallback Material'. Treat this specific cap as the frame finish so the RAL swatch controls it like the matching left cap. */if(meshName.includes('wall_profile_cap')&&(n.includes('fallback')||n==='')){mat.name='ral_7024';n='ral_7024';}if(n.includes('ral_7024')||n.includes('ral_9005')||n.includes('aluminium')||n.includes('aluminum')||n.includes('frame'))frameMaterials.add(mat);return mat;});o.material=Array.isArray(o.material)?copies:copies[0];});}
+function disposeObject(root){root.traverse(o=>{if(!o.isMesh)return;o.geometry?.dispose();(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{frameMaterials.delete(m);if(!Object.values(polyMaterials).includes(m))m.dispose();});});}
+function registerMaterials(root){root.traverse(o=>{if(!o.isMesh||!o.material)return;const meshName=(o.name||'').toLowerCase();const srcs=Array.isArray(o.material)?o.material:[o.material];const copies=srcs.map(src=>{const mat=src.clone();let n=(src.name||'').toLowerCase();/* The right rear wall-profile cap was exported as blue 'fallback Material'. Treat this specific cap as the frame finish so the RAL swatch controls it like the matching left cap. */if(meshName.includes('wall_profile_cap')&&(n.includes('fallback')||n==='')){mat.name='ral_7024';n='ral_7024';}if(n==='ral_7024'||n==='ral_9005')frameMaterials.add(mat);return mat;});o.material=Array.isArray(o.material)?copies:copies[0];});}
 function loadTexture(url){if(textureCache.has(url))return textureCache.get(url);const p=new Promise((resolve,reject)=>new THREE.TextureLoader().load(url,t=>{t.colorSpace=THREE.SRGBColorSpace;t.flipY=false;t.wrapS=THREE.RepeatWrapping;t.wrapT=THREE.RepeatWrapping;t.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);resolve(t);},undefined,reject));textureCache.set(url,p);return p;}
 async function applyFrameColour(hex){selectedColour=hex;try{const tex=await loadTexture(FRAME_TEXTURES[hex]);frameMaterials.forEach(m=>{m.map=tex;m.color.setRGB(1,1,1);if('metalness'in m)m.metalness=0;if('roughness'in m&&m.roughness<.12)m.roughness=.35;m.needsUpdate=true;});const label=hex==='#0A0A0A'?'RAL 9005 — Jet Black':'RAL 7024 — Graphite Grey';document.getElementById('selectedColour').textContent='Selected: '+label;document.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('selected',b.dataset.colour===hex));}catch(e){console.error(e);status.textContent='Could not load frame texture. Check the Materials folder.';}}
 // Use the actual polycarbonate reference map stored in the repository Materials folder.
@@ -241,72 +241,9 @@ function applyPolyFinish(root,finish){
   o.material=wasArray?next:next[0];
  });
 }
-function applyDoorGlassFinish(root){
- // The sliding-door GLBs already contain a correctly authored glass_clear
- // material with KHR_materials_transmission=1 and no polycarbonate texture.
- // Preserve that imported MeshPhysicalMaterial instead of replacing it with
- // a newly-created material (which was making the panes look milky/opaque).
- root.traverse(o=>{
-  if(!o.isMesh||!o.material)return;
-  const wasArray=Array.isArray(o.material),arr=wasArray?o.material:[o.material];
-  const next=arr.map(m=>{
-   const n=(m?.name||'').toLowerCase();
-   if(n.includes('glass_clear')||n.includes('glass'))return m;
-   return m;
-  });
-  o.material=wasArray?next:next[0];
- });
-}
-
-// Repair only the one 6m x 3.5m front sliding-door export whose three
-// material slots were exported as black "fallback Material" entries.
-// The slot order matches the working 4m/5m exports: aluminium, glass_clear, ral_7024.
-function restore600x350SlidingDoorMaterials(root){
- const slotNames=['aluminium','glass_clear','ral_7024'];
- root.traverse(o=>{
-  if(!o.isMesh||!Array.isArray(o.material))return;
-  const mats=o.material;
-  if(mats.length!==3||!mats.every(m=>(m?.name||'').toLowerCase().includes('fallback')))return;
-  const repaired=slotNames.map((name,i)=>{
-   if(i===0)return new THREE.MeshStandardMaterial({name,color:0xffffff,metalness:0.65,roughness:0.3,side:THREE.DoubleSide});
-   if(i===1)return new THREE.MeshPhysicalMaterial({name,color:0xffffff,metalness:0,roughness:0.05,transmission:1,ior:1.5,thickness:0.015,transparent:true,opacity:1,depthWrite:false,side:THREE.DoubleSide});
-   return new THREE.MeshStandardMaterial({name,color:0xffffff,metalness:0,roughness:0.2,side:THREE.DoubleSide});
-  });
-  // This anomalous export also omitted UVs. Generate simple planar UVs so the
-  // configurator's selected RAL frame texture can still display on slot 3.
-  const g=o.geometry,pos=g?.attributes?.position;
-  if(pos&&!g.attributes.uv){
-   const box=new THREE.Box3().setFromBufferAttribute(pos),size=box.getSize(new THREE.Vector3());
-   const uv=new Float32Array(pos.count*2);
-   for(let i=0;i<pos.count;i++){
-    uv[i*2]=(pos.getX(i)-box.min.x)/Math.max(size.x,1e-6);
-    uv[i*2+1]=(pos.getY(i)-box.min.y)/Math.max(size.y,1e-6);
-   }
-   g.setAttribute('uv',new THREE.BufferAttribute(uv,2));
-  }
-  o.material=repaired;
- });
-}
-
-// The 6m x 3.5m steel-look front export has the polycarbonate rib image
-// incorrectly attached to glass_clear. Remove only that glass map; retain
-// the imported aluminium and RAL frame materials unchanged.
-function removePolycarbMapFromSteelDoorGlass(root){
- root.traverse(o=>{
-  if(!o.isMesh||!o.material)return;
-  const mats=Array.isArray(o.material)?o.material:[o.material];
-  for(const m of mats){
-   if((m?.name||'').toLowerCase().includes('glass')){
-    m.map=null;m.bumpMap=null;m.normalMap=null;m.roughnessMap=null;m.metalnessMap=null;
-    m.color?.set(0xffffff);m.roughness=0.05;m.metalness=0;
-    if('transmission'in m)m.transmission=1;
-    m.needsUpdate=true;
-   }
-  }
- });
-}
 
 
+// Door GLBs are loaded with their embedded aluminium, clear-glass and RAL materials intact.
 function addModel(slot,root,polyFinish=null){removeModel(slot);registerMaterials(root);if(polyFinish)applyPolyFinish(root,polyFinish);assembly.add(root);loaded.set(slot,root);applyFrameColour(selectedColour);}
 function removeModel(slot){const obj=loaded.get(slot);if(!obj)return;assembly.remove(obj);disposeObject(obj);loaded.delete(slot);}
 function loadFile(path,success,failure){loader.load(BASE+path,g=>success(g.scene),undefined,e=>{console.error('GLB load failed:',path,e);failure?.(path);});}
@@ -332,13 +269,10 @@ function gablePath(side,finish){return `Side_Gable/nebbiolo_side_gable_${side}_$
 function sideAccessoryPath(side,value){if(!value)return null;const [kind,finish]=value.split(':');if(kind==='wall')return `Sidewall/nebbiolo_sidewall_${side}_${sizeCode()}.glb`;if(kind==='louvre')return `Louvre_Panel/nebbiolo_louvre_panel_${side}_${sizeCode()}.glb`;if(kind==='grillo')return `Grillo_Panel/nebbiolo_grillo_panel_${side}_${sizeCode()}.glb`;if(kind==='sliding')return `Sliding_Doors/nebbiolo_sliding_door_${side}_${sizeCode()}.glb`;if(kind==='steel')return `Steel_Look_Doors/nebbiolo_steel_door_${side}_${sizeCode()}.glb`;return null;}
 function requiresGable(value){return !!value&&['louvre','sliding','steel'].includes(value.split(':')[0]);}
 function updateGable(side,force){const selector=document.getElementById(side+'GableSelect');if(requiresGable(sideState[side].option)&&!selector.value)selector.value='glass';const finish=selector.value||'glass',needed=force??requiresGable(sideState[side].option);const slot=side+'Gable';if(!needed){removeModel(slot);return;}const path=gablePath(side,finish),token=++sideState[side].gableVersion;loadFile(path,root=>{if(token!==sideState[side].gableVersion){disposeObject(root);return;}addModel(slot,root,finish);},failed=>status.textContent='Could not load gable: '+failed);}
-async function updateSide(side){const state=sideState[side];state.version++;const version=state.version,value=document.getElementById(side+'Select').value;state.option=value;removeModel(side+'Option');updateGable(side);const path=sideAccessoryPath(side,value);if(!path){status.textContent=`${side==='left'?'Left':'Right'} side cleared.`;return;}loadFile(path,root=>{if(state.version!==version||state.option!==value){disposeObject(root);return;}const finish=value.split(':')[1]||'glass';if(value==='sliding'||value==='steel')applyDoorGlassFinish(root);addModel(side+'Option',root,value.startsWith('wall:')?finish:null);status.textContent=`${side==='left'?'Left':'Right'} side accessory loaded.`;},failed=>{if(state.version===version){state.option='';document.getElementById(side+'Select').value='';updateGable(side);status.textContent='Could not load '+failed+'. Check the exact filename.';}});}
+async function updateSide(side){const state=sideState[side];state.version++;const version=state.version,value=document.getElementById(side+'Select').value;state.option=value;removeModel(side+'Option');updateGable(side);const path=sideAccessoryPath(side,value);if(!path){status.textContent=`${side==='left'?'Left':'Right'} side cleared.`;return;}loadFile(path,root=>{if(state.version!==version||state.option!==value){disposeObject(root);return;}const finish=value.split(':')[1]||'glass';addModel(side+'Option',root,value.startsWith('wall:')?finish:null);status.textContent=`${side==='left'?'Left':'Right'} side accessory loaded.`;},failed=>{if(state.version===version){state.option='';document.getElementById(side+'Select').value='';updateGable(side);status.textContent='Could not load '+failed+'. Check the exact filename.';}});}
 for(const side of ['left','right']){document.getElementById(side+'Select').addEventListener('change',()=>updateSide(side));document.getElementById(side+'GableSelect').addEventListener('change',()=>{if(requiresGable(sideState[side].option))updateGable(side);else if(document.getElementById(side+'GableSelect').value)updateGable(side,true);else removeModel(side+'Gable');});}
 const frontState={version:0,path:''};
-function updateFront(){const value=document.getElementById('frontSelect').value;frontState.version++;const version=frontState.version;frontState.path=value;removeModel('frontOption');if(!value)return;let path;if(value.startsWith('Sliding_Doors/'))path=`Sliding_Doors/nebbiolo_sliding_door_front_${sizeCode()}.glb`;else path=`Steel_Look_Doors/nebbiolo_steel_door_front_${sizeCode()}.glb`;loadFile(path,root=>{if(frontState.version!==version){disposeObject(root);return;}
-  if(value.startsWith('Sliding_Doors/')&&sizeCode()==='600_350')restore600x350SlidingDoorMaterials(root);
-  if(value.startsWith('Steel_Look_Doors/')&&sizeCode()==='600_350')removePolycarbMapFromSteelDoorGlass(root);
-  applyDoorGlassFinish(root);addModel('frontOption',root);status.textContent='Front accessory loaded.';},failed=>status.textContent='Could not load '+failed+'. Check the exact filename.');}
+function updateFront(){const value=document.getElementById('frontSelect').value;frontState.version++;const version=frontState.version;frontState.path=value;removeModel('frontOption');if(!value)return;let path;if(value.startsWith('Sliding_Doors/'))path=`Sliding_Doors/nebbiolo_sliding_door_front_${sizeCode()}.glb`;else path=`Steel_Look_Doors/nebbiolo_steel_door_front_${sizeCode()}.glb`;loadFile(path,root=>{if(frontState.version!==version){disposeObject(root);return;}addModel('frontOption',root);status.textContent='Front accessory loaded.';},failed=>status.textContent='Could not load '+failed+'. Check the exact filename.');}
 document.getElementById('frontSelect').addEventListener('change',updateFront);
 document.querySelectorAll('.product-tab').forEach(tab=>tab.addEventListener('click',()=>{const product=tab.dataset.product;document.querySelectorAll('.product-tab').forEach(t=>t.classList.toggle('active',t===tab));if(product!=='Nebbiolo'){status.textContent=product.replaceAll('_',' ')+' model assets are not connected yet.';document.getElementById('panelTitle').textContent=product.replaceAll('_',' ');document.getElementById('hudTitle').textContent=product.replaceAll('_',' ')+' preview';hudStatus.textContent='Model assets not connected yet';}else{document.getElementById('panelTitle').textContent='Nebbiolo';document.getElementById('hudTitle').textContent='Nebbiolo preview';hudStatus.textContent=`${selectedLength}m × ${selectedDepth}m model`;status.textContent='Nebbiolo selected.';}}));
 document.querySelectorAll('.swatch').forEach(b=>b.addEventListener('click',()=>applyFrameColour(b.dataset.colour)));
